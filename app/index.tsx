@@ -1,9 +1,15 @@
-import { Text, View } from "react-native";
+import { useAppFonts } from "@/utils/fonts";
+import { Redirect } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-	return (
-		<View className='flex-1 items-center justify-center bg-white'>
-			<Text className='font-bold text-primary text-4xl'>Hi beta</Text>
-		</View>
-	);
+	const { loaded, error } = useAppFonts();
+
+	if (!loaded && !error) {
+		return null;
+	}
+
+	return <Redirect href='/auth/email' />;
 }
