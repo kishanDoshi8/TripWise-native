@@ -1,10 +1,11 @@
+import { useAuth } from "@/providers/AuthProvider";
+import { Redirect } from "expo-router";
 import React from "react";
-import { Text, View } from "react-native";
 
-export default function index() {
-	return (
-		<View>
-			<Text>index</Text>
-		</View>
-	);
+export default function App() {
+	const { isAuthenticated } = useAuth();
+
+	if (!isAuthenticated) return <Redirect href={"/auth/email"} />;
+
+	return <Redirect href={"/(app)/(tabs)"} />;
 }

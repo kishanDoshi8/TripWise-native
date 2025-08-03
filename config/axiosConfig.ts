@@ -1,4 +1,5 @@
-import { clearTokens, getAccessToken, getRefreshToken, setTokens } from '@/utils/token';
+import { useAuth } from '@/providers/AuthProvider';
+import { getAccessToken, getRefreshToken, setTokens } from '@/utils/secureStore';
 import axios from 'axios';
 import { apiRoutes } from './apiRoutes';
 
@@ -33,21 +34,21 @@ api.interceptors.response.use(
         if (!refreshToken) throw new Error("No refresh token");
 
         const { url, method } = apiRoutes.auth.refresh;
-        const response = await axios.request({
+        const response = await api.request({
           url,
           method,
           data: { refreshToken },
         });
 
-        const { accessToken: newAccess, refreshToken: newRefresh } = response.data;
+        const { token: newAccess, refreshToken: newRefresh } = response.data;
 
         await setTokens(newAccess, newRefresh);
 
         originalRequest.headers.Authorization = `Bearer ${newAccess}`;
         return api(originalRequest);
       } catch (err: any) {
-        await clearTokens();
-        // You could notify the context to logout here
+        const { logout } = useAuth();
+        logout();
         return Promise.reject(new Error(err));
       }
     }

@@ -1,5 +1,14 @@
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
+import React from "react";
 
-export default function AuthLayout() {
-	return <Slot />;
+export default function AppLayout() {
+	return (
+		<Stack
+			screenOptions={{
+				headerShown: false,
+				animation: "simple_push",
+				gestureDirection: "horizontal",
+			}}
+		/>
+	);
 }

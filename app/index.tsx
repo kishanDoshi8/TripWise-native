@@ -11,5 +11,5 @@ export default function App() {
 		return null;
 	}
 
-	return <Redirect href='/auth/email' />;
+	return <Redirect href={"/auth/email"} />;
 }

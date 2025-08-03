@@ -1,9 +1,17 @@
 import { apiRoutes } from "@/config/apiRoutes";
 import api from "@/config/axiosConfig";
 import { queryKeys } from "@/config/queryKeys";
+import { KEYS } from "@/constants/queryKeys";
 import { User } from "@/types";
-import { clearTokens, getAccessToken, setTokens } from "@/utils/token";
-import { useQuery } from "@tanstack/react-query";
+import {
+	clearTokens,
+	clearUser,
+	getAccessToken,
+	getUser,
+	setTokens,
+	setUser,
+} from "@/utils/secureStore";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, {
 	createContext,
 	useContext,
@@ -14,10 +22,11 @@ import React, {
 
 interface AuthContextProps {
 	user: User | null;
+	isAuthenticated: boolean;
 	isLoading: boolean;
 	token: string | null;
-	login: (accessToken: string, refreshToken: string) => void;
-	logout: () => void;
+	login: (user: User, accessToken: string, refreshToken: string) => void;
+	logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -26,13 +35,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [token, setToken] = useState<string | null>(null);
+	const queryClient = useQueryClient();
 
 	useEffect(() => {
-		const loadToken = async () => {
+		const loadData = async () => {
 			const token = await getAccessToken();
 			if (token) setToken(token);
+
+			const user = await getUser();
+			if (user) setUserData(user);
 		};
-		loadToken();
+		loadData();
 	}, []);
 
 	const { data: user, isLoading } = useQuery<User>({
@@ -47,14 +60,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		staleTime: 1000 * 60 * 10,
 	});
 
-	const login = async (accessToken: string, refreshToken: string) => {
+	const login = async (
+		user: User,
+		accessToken: string,
+		refreshToken: string
+	) => {
 		await setTokens(accessToken, refreshToken);
 		setToken(accessToken);
+		setUserData(user);
 	};
 
 	const logout = async () => {
 		await clearTokens();
+		await clearUser();
+		queryClient.removeQueries({ queryKey: KEYS.user });
 		setToken(null);
+	};
+
+	const setUserData = (user: User) => {
+		queryClient.setQueryData(KEYS.user, user);
+		setUser(user);
 	};
 
 	const data = useMemo(
@@ -62,6 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			token,
 			user: isLoading ? null : user ?? null,
 			isLoading,
+			isAuthenticated: Boolean(token && user),
 			login,
 			logout,
 		}),

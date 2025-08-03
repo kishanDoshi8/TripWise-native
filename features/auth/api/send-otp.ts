@@ -10,7 +10,7 @@ const sendOtpInputSchema = z.object({
 type SendOtpVariables = z.infer<typeof sendOtpInputSchema>;
 type SendOtpResult = { message: string };
 
-const sendOtp = async ({ email }: SendOtpVariables): Promise<SendOtpResult> => {
+export const sendOtp = async ({ email }: SendOtpVariables): Promise<SendOtpResult> => {
     const { url, method } = apiRoutes.auth.sendOtp;
     const response = await api.request<SendOtpResult>({ url, method, data: { email }});
     return response.data;
