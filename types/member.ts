@@ -4,6 +4,7 @@ export const memberUserSchema = z.object({
     id: z.string(),
     displayName: z.string().min(3).max(18),
     tag: z.string().length(4),
+    email: z.email(),
 });
 export type MemberUser = z.infer<typeof memberUserSchema>;
 

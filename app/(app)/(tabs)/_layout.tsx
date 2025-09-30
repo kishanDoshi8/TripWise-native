@@ -1,10 +1,23 @@
 import { BText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
-import { Tabs } from "expo-router";
-import React from "react";
+import { useAuth } from "@/providers/AuthProvider";
+import { Tabs, useRouter } from "expo-router";
+import React, { useEffect } from "react";
 
-export default function AppLayout() {
+let hasRedirected = false;
+
+export default function TabsLayout() {
+	const { user } = useAuth();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (user?.lastTripId && !hasRedirected) {
+			hasRedirected = true;
+			router.push(`/trip/${user.lastTripId}`);
+		}
+	}, [user]);
+
 	return (
 		<Tabs
 			screenOptions={{

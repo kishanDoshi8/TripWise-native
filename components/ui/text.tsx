@@ -32,17 +32,20 @@ export const textVariants = cva("text-base web:select-text", {
 	},
 });
 
+export type TextProps = React.ComponentProps<typeof RNText> &
+	TextVariantProps & {
+		ref?: React.RefObject<RNText>;
+		asChild?: boolean;
+	};
+
 function RText({
 	className,
 	asChild = false,
 	variant,
 	size,
+	selectable = true,
 	...props
-}: React.ComponentProps<typeof RNText> &
-	TextVariantProps & {
-		ref?: React.RefObject<RNText>;
-		asChild?: boolean;
-	}) {
+}: TextProps) {
 	const textClass = React.useContext(TextClassContext);
 	const Component = asChild ? Slot.Text : RNText;
 	return (
@@ -53,6 +56,7 @@ function RText({
 				className
 			)}
 			style={[{ fontFamily: "UbuntuMono_400Regular" }, props.style]}
+			selectable={true}
 			{...props}
 		/>
 	);
@@ -64,11 +68,7 @@ function BText({
 	variant,
 	size,
 	...props
-}: React.ComponentProps<typeof RNText> &
-	TextVariantProps & {
-		ref?: React.RefObject<RNText>;
-		asChild?: boolean;
-	}) {
+}: TextProps) {
 	const textClass = React.useContext(TextClassContext);
 	const Component = asChild ? Slot.Text : RNText;
 	return (
@@ -82,6 +82,7 @@ function BText({
 				{ fontFamily: "UbuntuMono_700Bold", overflow: "visible" },
 				props.style,
 			]}
+			selectable
 			{...props}
 		/>
 	);
@@ -93,11 +94,7 @@ function IText({
 	variant,
 	size,
 	...props
-}: React.ComponentProps<typeof RNText> &
-	TextVariantProps & {
-		ref?: React.RefObject<RNText>;
-		asChild?: boolean;
-	}) {
+}: TextProps) {
 	const textClass = React.useContext(TextClassContext);
 	const Component = asChild ? Slot.Text : RNText;
 	return (
@@ -114,10 +111,11 @@ function IText({
 				},
 				props.style,
 			]}
+			selectable
 			{...props}
 		/>
 	);
 }
 
-export { BText, RText, IText, TextClassContext };
+export { BText, IText, RText, TextClassContext };
 export type TextVariantProps = VariantProps<typeof textVariants>;

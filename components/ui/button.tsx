@@ -1,3 +1,4 @@
+import { COLORS } from "@/constants/colors";
 import { cn } from "@/utils/cn";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
@@ -287,7 +288,9 @@ function Button({
 				{...props}
 			>
 				<View className={`flex-row gap-2 items-center justify-center`}>
-					{isLoading && <ActivityIndicator color={"white"} />}
+					{isLoading && (
+						<ActivityIndicator color={COLORS.accent.light} />
+					)}
 					{!isLoading && icon && <BText>{icon}</BText>}
 					<>{children}</>
 				</View>

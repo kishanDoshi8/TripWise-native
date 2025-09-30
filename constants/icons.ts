@@ -14,6 +14,13 @@ export const ICONS = {
 	search: createIcon(MaterialIcons, 'search'),
 	location: createIcon(MaterialIcons, 'location-pin'),
 	calendar: createIcon(MaterialIcons, 'calendar-month'),
+	check: createIcon(MaterialIcons, 'check'),
+	close: createIcon(MaterialIcons, 'close'),
+	dot: createIcon(MaterialIcons, 'fiber-manual-record'),
+	role: createIcon(MaterialIcons, 'assignment-ind'),
+	copy: createIcon(MaterialIcons, 'content-copy'),
+	chevronRight: createIcon(MaterialIcons, 'chevron-right'),
+	edit: createIcon(MaterialIcons, 'edit'),
 };
 
 

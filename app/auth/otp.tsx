@@ -116,7 +116,7 @@ export default function OtpScreen() {
 
 	return (
 		<>
-			<View className={`flex-row items-stretch gap-4`}>
+			<View className={`flex-row gap-4`}>
 				<Input
 					placeholder='4-digit access code'
 					autoComplete='off'
@@ -126,7 +126,7 @@ export default function OtpScreen() {
 					clearButtonMode='unless-editing'
 					value={accessCode}
 					onChangeText={setAccessCode}
-					className={`flex-1`}
+					wrapperClassName={`flex-1`}
 					maxLength={4}
 					returnKeyType='done'
 					onSubmitEditing={verifyOtp}

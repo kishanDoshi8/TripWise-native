@@ -11,11 +11,18 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useToast } from "@/hooks/useToast";
 import { useAuth } from "@/providers/AuthProvider";
 import { getErrorMessage } from "@/utils/errorMessage";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View } from "react-native";
+import {
+	RefreshControl,
+	ScrollView,
+	TouchableOpacity,
+	View,
+} from "react-native";
 
 export default function Home() {
-	const { user } = useAuth();
+	const { user, setLastSelectedTrip } = useAuth();
+	const router = useRouter();
 	const { showToast } = useToast();
 
 	const { data: trips, isPending, refetch, error } = useGetUpcomingTrips();
@@ -47,7 +54,14 @@ export default function Home() {
 		refetch();
 	};
 
-	if (error) showToast({ type: "error", title: getErrorMessage(error) });
+	const handleTripNavigate = (tripId: string) => {
+		setLastSelectedTrip(tripId);
+		router.push(`/(app)/trip/${tripId}`);
+	};
+
+	useEffect(() => {
+		if (error) showToast({ type: "error", title: getErrorMessage(error) });
+	}, [error]);
 
 	if (!user) return null;
 
@@ -98,7 +112,13 @@ export default function Home() {
 					<BText className={`text-xl pb-4`}>My Trips</BText>
 					<View className={`flex-1 gap-8`}>
 						{filteredTrips?.map((trip) => (
-							<TripCard key={trip.id} trip={trip} />
+							<TouchableOpacity
+								key={trip.id}
+								className='flex-1 w-full'
+								onPress={() => handleTripNavigate(trip.id)}
+							>
+								<TripCard trip={trip} />
+							</TouchableOpacity>
 						))}
 					</View>
 					{!isPending &&

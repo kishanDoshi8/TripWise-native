@@ -1,6 +1,5 @@
 import { apiRoutes } from "@/config/apiRoutes";
 import api from "@/config/axiosConfig";
-import { queryKeys } from "@/config/queryKeys";
 import { KEYS } from "@/constants/queryKeys";
 import { User } from "@/types";
 import {
@@ -11,7 +10,7 @@ import {
 	setTokens,
 	setUser,
 } from "@/utils/secureStore";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, {
 	createContext,
 	useContext,
@@ -25,6 +24,7 @@ interface AuthContextProps {
 	isAuthenticated: boolean;
 	isLoading: boolean;
 	token: string | null;
+	setLastSelectedTrip: (tripId: string) => void;
 	login: (user: User, accessToken: string, refreshToken: string) => void;
 	logout: () => Promise<void>;
 }
@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, []);
 
 	const { data: user, isLoading } = useQuery<User>({
-		queryKey: queryKeys.user,
+		queryKey: KEYS.user,
 		queryFn: async () => {
 			const response = await api.request<{ user: User }>(
 				apiRoutes.auth.me
@@ -58,6 +58,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		},
 		enabled: !!token,
 		staleTime: 1000 * 60 * 10,
+	});
+
+	const saveLastTripMutation = useMutation({
+		mutationFn: async (tripId: string): Promise<User> => {
+			const response = await api.request<{ user: User }>(
+				apiRoutes.user.lastSelectedTrip(tripId)
+			);
+			return response.data.user;
+		},
+		onSuccess: async (user: User) => {
+			queryClient.setQueryData(KEYS.user, user);
+			await setUser(user);
+		},
 	});
 
 	const login = async (
@@ -82,12 +95,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		setUser(user);
 	};
 
+	const setLastSelectedTrip = (tripId: string) => {
+		saveLastTripMutation.mutate(tripId);
+	};
+
 	const data = useMemo(
 		() => ({
 			token,
 			user: isLoading ? null : user ?? null,
 			isLoading,
 			isAuthenticated: Boolean(token && user),
+			setLastSelectedTrip,
 			login,
 			logout,
 		}),
