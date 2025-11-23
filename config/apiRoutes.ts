@@ -18,5 +18,6 @@ export const apiRoutes = {
         details: (tripId: string) => ({ url: `/trips/${tripId}`, method: 'GET', }),
         members: (tripId: string) => ({ url: `/trips/${tripId}/members`, method: 'GET' }),
         sharedItems: (tripId: string) => ({ url: `/packing-items/${tripId}/shared`, method: 'GET' }),
+        updateSharedItem: (itemId: string) => ({ url: `/packing-items/${itemId}`, method: 'PATCH' }),
     },
 }

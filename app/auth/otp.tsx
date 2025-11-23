@@ -148,6 +148,7 @@ export default function OtpScreen() {
 				disabled={!isValid}
 				isLoading={isPending}
 				onPress={verifyOtp}
+				fullWidth={true}
 			>
 				<BText>Dive in</BText>
 			</Button>

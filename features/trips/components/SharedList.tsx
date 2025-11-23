@@ -10,10 +10,13 @@ import Spinner from "@/components/ui/Spinner";
 import { BText, RText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
+import { KEYS } from "@/constants/queryKeys";
 import { useTripMemberColors } from "@/providers/TripMemberColorsProvider";
 import { Item } from "@/types/packingItem";
+import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { View } from "react-native";
+import { useUpdateSharedItem } from "../api/update-shared-item";
 
 type Props = {
 	items: Item[];
@@ -46,8 +49,33 @@ export default function SharedList({ items, isLoading }: Readonly<Props>) {
 }
 
 function SharedItem({ item }: Readonly<{ item: Item }>) {
-	const [isChecked, setIsChecked] = React.useState(item.packedStatus);
 	const memberColors = useTripMemberColors();
+	const { mutate: updateItem } = useUpdateSharedItem(item.id);
+	const queryClient = useQueryClient();
+
+	const toggleChecked = () => {
+		const nextValue = !item.packedStatus;
+
+		const updatedItem = {
+			...item,
+			packedStatus: nextValue,
+		};
+
+		updateItem({
+			itemId: item.id,
+			data: { packedStatus: nextValue },
+		});
+
+		queryClient.setQueryData(
+			KEYS.trip.sharedItems(item.tripId),
+			(prev: Item[]) => {
+				if (!prev) return prev;
+				return prev.map((i) => {
+					return i.id === item.id ? updatedItem : i;
+				});
+			}
+		);
+	};
 
 	return (
 		<View>
@@ -59,8 +87,8 @@ function SharedItem({ item }: Readonly<{ item: Item }>) {
 					>
 						<Checkbox
 							id={item.id}
-							checked={isChecked}
-							onCheckedChange={() => setIsChecked(!isChecked)}
+							checked={item.packedStatus}
+							onCheckedChange={toggleChecked}
 							className='mt-[2px]'
 						/>
 						<View className={`flex-1`}>
@@ -69,7 +97,7 @@ function SharedItem({ item }: Readonly<{ item: Item }>) {
 							>
 								<RText className='text-lg'>{item.name}</RText>
 								{item.quantity > 0 && (
-									<RText className='text-lg bg-secondary px-3 rounded-md'>
+									<RText className='text-xl bg-secondary px-3 rounded-md'>
 										{item.quantity}
 									</RText>
 								)}

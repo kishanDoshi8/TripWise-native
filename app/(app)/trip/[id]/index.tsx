@@ -9,12 +9,14 @@ import { useGetTripDetails } from "@/features/trips/api/get-trip-details";
 import Details from "@/features/trips/components/Details";
 import SharedList from "@/features/trips/components/SharedList";
 import TripMemebers from "@/features/trips/components/TripMemebers";
+import { useItemSocket } from "@/features/trips/hooks/useItemSocket";
+import { useTripSocket } from "@/features/trips/hooks/useTripSocket";
 import { useToast } from "@/hooks/useToast";
 import { TripMemberColorsProvider } from "@/providers/TripMemberColorsProvider";
 import { getErrorMessage } from "@/utils/errorMessage";
 import { getThumbnailSource } from "@/utils/thumbnailHelper";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { Link, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useRef } from "react";
 import {
 	ActivityIndicator,
@@ -29,6 +31,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function TripDetails() {
 	const insets = useSafeAreaInsets();
 	const { id }: { id: string } = useLocalSearchParams();
+
+	useTripSocket(id);
+	useItemSocket(id);
 
 	const {
 		data: trip,
@@ -112,25 +117,24 @@ export default function TripDetails() {
 						zIndex: 50,
 					}}
 				>
-					{/* Add go back navigation */}
-					<Link href='/(app)/(tabs)' asChild>
-						<Pressable hitSlop={10} accessibilityRole='button'>
-							{({ pressed }) => (
-								<View
-									className={`rounded-full h-12 w-12 items-center justify-center ${
-										pressed
-											? "bg-secondary"
-											: "bg-background"
-									}`}
-								>
-									{ICONS.chevronLeft(
-										24,
-										COLORS.secondary.foreground
-									)}
-								</View>
-							)}
-						</Pressable>
-					</Link>
+					<Pressable
+						hitSlop={10}
+						accessibilityRole='button'
+						onPress={() => router.back()}
+					>
+						{({ pressed }) => (
+							<View
+								className={`rounded-full h-12 w-12 items-center justify-center ${
+									pressed ? "bg-secondary" : "bg-background"
+								}`}
+							>
+								{ICONS.chevronLeft(
+									24,
+									COLORS.secondary.foreground
+								)}
+							</View>
+						)}
+					</Pressable>
 					<Button
 						size={"iconMedium"}
 						color={"secondary"}
