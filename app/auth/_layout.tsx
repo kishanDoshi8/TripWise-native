@@ -14,10 +14,7 @@ export default function AuthLayout() {
 	const { isAuthenticated, isLoading, token } = useAuth();
 
 	useEffect(() => {
-		console.log(isAuthenticated);
 		if (isAuthenticated) {
-			console.log(isLoading);
-			console.log(token);
 			router.replace({ pathname: "/(app)/(tabs)" });
 		}
 	}, [isAuthenticated, token, isLoading]);

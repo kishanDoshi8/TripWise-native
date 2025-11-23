@@ -40,14 +40,14 @@ export default function TripDetails() {
 	const {
 		data: members = [],
 		isPending: isMembersLoading,
-		error: tripMembersError,
+		// error: tripMembersError,
 		refetch: refetchTripMembers,
 	} = useGetTripMembers(id);
 
 	const {
 		data: sharedItems = [],
 		isPending: isSharedItemsLoading,
-		error: sharedItemsError,
+		// error: sharedItemsError,
 		refetch: refetchSharedItems,
 	} = useGetSharedItems(id);
 

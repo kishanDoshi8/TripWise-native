@@ -1,6 +1,7 @@
 import { queryClient } from "@/config/queryClientConfig";
 import { toastConfig } from "@/config/toastConfig";
 import AuthProvider from "@/providers/AuthProvider";
+import { SocketProvider } from "@/providers/SocketProvider";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalHost } from "@rn-primitives/portal";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -16,11 +17,13 @@ export default function RootLayout() {
 			<BottomSheetModalProvider>
 				<QueryClientProvider client={queryClient}>
 					<AuthProvider>
-						<View className='bg-background flex-1'>
-							<Slot />
-							<PortalHost />
-							<Toast config={toastConfig} />
-						</View>
+						<SocketProvider>
+							<View className='bg-background flex-1'>
+								<Slot />
+								<PortalHost />
+								<Toast config={toastConfig} />
+							</View>
+						</SocketProvider>
 					</AuthProvider>
 				</QueryClientProvider>
 			</BottomSheetModalProvider>
