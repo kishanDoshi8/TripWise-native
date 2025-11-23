@@ -6,49 +6,17 @@ import {
 } from "@/components/ui/accordian";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import Spinner from "@/components/ui/Spinner";
-import { BText, RText } from "@/components/ui/text";
+import { RText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
 import { KEYS } from "@/constants/queryKeys";
 import { useTripMemberColors } from "@/providers/TripMemberColorsProvider";
 import { Item } from "@/types/packingItem";
 import { useQueryClient } from "@tanstack/react-query";
-import React from "react";
 import { View } from "react-native";
 import { useUpdateSharedItem } from "../api/update-shared-item";
 
-type Props = {
-	items: Item[];
-	isLoading: boolean;
-};
-
-export default function SharedList({ items, isLoading }: Readonly<Props>) {
-	return (
-		<View className={`p-4 bg-secondary-dark mt-8`}>
-			<Accordion type='single' collapsible defaultValue={"item-1"}>
-				<AccordionItem value='item-1'>
-					<AccordionTrigger>
-						<BText size='xl'>Shared List</BText>
-					</AccordionTrigger>
-					<AccordionContent>
-						{isLoading ? (
-							<Spinner />
-						) : (
-							<View>
-								{items.map((item) => (
-									<SharedItem key={item.id} item={item} />
-								))}
-							</View>
-						)}
-					</AccordionContent>
-				</AccordionItem>
-			</Accordion>
-		</View>
-	);
-}
-
-function SharedItem({ item }: Readonly<{ item: Item }>) {
+export function ListItem({ item }: Readonly<{ item: Item }>) {
 	const memberColors = useTripMemberColors();
 	const { mutate: updateItem } = useUpdateSharedItem(item.id);
 	const queryClient = useQueryClient();
@@ -129,14 +97,6 @@ function SharedItem({ item }: Readonly<{ item: Item }>) {
 											</View>
 										)
 								)}
-								{/* <Button
-									size='iconSmall'
-									variant={"bordered"}
-									color={"secondary"}
-									className='rounded-full'
-								>
-									{ICONS.add(14, COLORS.secondary.DEFAULT)}
-								</Button> */}
 							</View>
 						</View>
 					</AccordionTrigger>
