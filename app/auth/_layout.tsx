@@ -11,13 +11,16 @@ import Animated from "react-native-reanimated";
 export default function AuthLayout() {
 	const animatedStyles = useKeyboardOffset();
 	const router = useRouter();
-	const { isAuthenticated, isLoading } = useAuth();
+	const { isAuthenticated, isLoading, token } = useAuth();
 
 	useEffect(() => {
+		console.log(isAuthenticated);
 		if (isAuthenticated) {
+			console.log(isLoading);
+			console.log(token);
 			router.replace({ pathname: "/(app)/(tabs)" });
 		}
-	}, [isAuthenticated]);
+	}, [isAuthenticated, token, isLoading]);
 
 	if (isLoading) {
 		return (

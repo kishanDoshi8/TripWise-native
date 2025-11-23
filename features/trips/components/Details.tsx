@@ -12,8 +12,10 @@ type Props = {
 
 export default function Details({ trip }: Readonly<Props>) {
 	return (
-		<View className={`px-8`}>
-			<BText className='text-3xl'>{trip.name}</BText>
+		<View className={`px-4`}>
+			<View className={`justify-between flex-row items-center mb-4`}>
+				<BText className='text-3xl'>{trip.name}</BText>
+			</View>
 			<View
 				style={{
 					flexDirection: "row",

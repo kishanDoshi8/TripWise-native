@@ -10,5 +10,6 @@ export const KEYS = {
         ALL: ['trip'],
         details: (tripId: string) => (['trip', 'details', tripId]),
         members: (tripId: string) => (['trip', 'members', tripId]),
+        sharedItems: (tripId: string) => (['trip', 'sharedItems', tripId]),
     }
 }

@@ -1,6 +1,7 @@
 import { apiRoutes } from "@/config/apiRoutes";
 import api from "@/config/axiosConfig";
 import { KEYS } from "@/constants/queryKeys";
+import { registerLogoutHandler } from "@/providers/authEvents";
 import { User } from "@/types";
 import {
 	clearTokens,
@@ -89,6 +90,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		queryClient.removeQueries({ queryKey: KEYS.user });
 		setToken(null);
 	};
+
+	useEffect(() => {
+		registerLogoutHandler(logout);
+		return () => registerLogoutHandler(null);
+	}, [logout]);
 
 	const setUserData = (user: User) => {
 		queryClient.setQueryData(KEYS.user, user);

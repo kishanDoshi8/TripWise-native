@@ -61,6 +61,7 @@ export default function EmailScreen() {
 				onPress={sendOtp}
 				isLoading={isPending}
 				size={"lg"}
+				fullWidth={true}
 			>
 				<BText>Login</BText>
 			</Button>

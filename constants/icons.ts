@@ -20,7 +20,13 @@ export const ICONS = {
 	role: createIcon(MaterialIcons, 'assignment-ind'),
 	copy: createIcon(MaterialIcons, 'content-copy'),
 	chevronRight: createIcon(MaterialIcons, 'chevron-right'),
+	chevronLeft: createIcon(MaterialIcons, 'chevron-left'),
+	chevronDown: createIcon(MaterialIcons, 'keyboard-arrow-down'),
 	edit: createIcon(MaterialIcons, 'edit'),
+	settings: createIcon(MaterialIcons, 'settings'),
+	options: createIcon(AntDesign, 'ellipsis'),
+	notes: createIcon(MaterialIcons, 'notes'),
+	delete: createIcon(MaterialIcons, 'delete'),
 };
 
 

@@ -25,7 +25,9 @@ const buttonVariants = cva(
 				default: "h-10 px-4 py-2 native:h-12 native:px-5 native:py-3",
 				sm: "h-9 rounded-md px-3",
 				lg: "h-11 rounded-md px-8 native:h-14",
+				iconSmall: "h-8 w-8",
 				icon: "h-10 w-10",
+				iconMedium: "h-12 w-12",
 				iconLarge: "h-16 w-16",
 			},
 		},
@@ -148,7 +150,9 @@ const buttonTextVariants = cva(
 				default: "",
 				sm: "",
 				lg: "native:text-lg",
+				iconSmall: "",
 				icon: "",
+				iconMedium: "",
 				iconLarge: "text-2xl",
 			},
 		},
@@ -255,6 +259,7 @@ type ButtonProps = React.ComponentProps<typeof Pressable> &
 	VariantProps<typeof buttonVariants> & {
 		isLoading?: boolean;
 		icon?: React.ReactNode;
+		fullWidth?: boolean;
 	};
 
 function Button({
@@ -265,6 +270,7 @@ function Button({
 	size,
 	isLoading = false,
 	icon,
+	fullWidth = false,
 	children,
 	...props
 }: ButtonProps) {
@@ -281,6 +287,7 @@ function Button({
 			<Pressable
 				className={cn(
 					isDisabled && "opacity-70 web:pointer-events-none",
+					fullWidth ? "w-full" : "self-start",
 					buttonVariants({ variant, color, size, className })
 				)}
 				ref={ref}

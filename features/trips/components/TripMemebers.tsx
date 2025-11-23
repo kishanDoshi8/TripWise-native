@@ -1,7 +1,8 @@
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { BText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
-import { useTripMemberColors } from "@/hooks/useTripMemberColors";
+import { useTripMemberColors } from "@/providers/TripMemberColorsProvider";
 import { Member } from "@/types/member";
 import { Link } from "expo-router";
 import React from "react";
@@ -13,7 +14,8 @@ type Props = {
 };
 
 export default function TripMemebers({ members }: Readonly<Props>) {
-	const memberColors = useTripMemberColors(members);
+	const memberColors = useTripMemberColors();
+	const displayedMembers = members.slice(0, 5);
 
 	return (
 		<View className={`bg-secondary-dark mt-4 gap-4`}>
@@ -21,7 +23,7 @@ export default function TripMemebers({ members }: Readonly<Props>) {
 				<Pressable>
 					{({ pressed }) => (
 						<View
-							className={`flex-row justify-between items-center w-full px-8 py-4`}
+							className={`flex-row justify-between items-center w-full px-4 py-4`}
 							style={{
 								backgroundColor: pressed
 									? COLORS.secondary.DEFAULT
@@ -34,14 +36,23 @@ export default function TripMemebers({ members }: Readonly<Props>) {
 					)}
 				</Pressable>
 			</Link>
-			<View className={`flex-row gap-2 mt-2 px-8 pb-8`}>
-				{members?.map((member) => (
+			<View className={`flex-row gap-2 mt-2 px-4 pb-8`}>
+				{displayedMembers?.map((member, i) => (
 					<MemberAvatar
 						key={member.user.id}
 						member={member}
 						color={memberColors[member.user.id]}
 					/>
 				))}
+				{members.length > displayedMembers.length && (
+					<Avatar key={members.length} alt={`+${members.length - 4}`}>
+						<AvatarFallback className={`bg-secondary-light`}>
+							<BText size='xl' className='text-secondary-dark'>
+								+{members.length - displayedMembers.length}
+							</BText>
+						</AvatarFallback>
+					</Avatar>
+				)}
 			</View>
 		</View>
 	);

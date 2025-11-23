@@ -156,6 +156,7 @@ export default function OtpScreen() {
 				variant={"flat"}
 				onPress={onGoBack}
 				icon={ICONS.back()}
+				fullWidth={true}
 			>
 				<BText>{email}</BText>
 			</Button>

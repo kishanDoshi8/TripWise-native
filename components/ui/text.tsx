@@ -44,6 +44,7 @@ function RText({
 	variant,
 	size,
 	selectable = true,
+	style,
 	...props
 }: TextProps) {
 	const textClass = React.useContext(TextClassContext);
@@ -55,7 +56,7 @@ function RText({
 				textClass,
 				className
 			)}
-			style={[{ fontFamily: "UbuntuMono_400Regular" }, props.style]}
+			style={[{ fontFamily: "UbuntuMono_400Regular" }, style]}
 			selectable={true}
 			{...props}
 		/>
@@ -67,6 +68,7 @@ function BText({
 	asChild = false,
 	variant,
 	size,
+	style,
 	...props
 }: TextProps) {
 	const textClass = React.useContext(TextClassContext);
@@ -80,7 +82,7 @@ function BText({
 			)}
 			style={[
 				{ fontFamily: "UbuntuMono_700Bold", overflow: "visible" },
-				props.style,
+				style,
 			]}
 			selectable
 			{...props}

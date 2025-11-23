@@ -1,23 +1,23 @@
-import { useAuth } from '@/providers/AuthProvider';
+import { triggerLogout } from "@/providers/authEvents";
 import { getAccessToken, getRefreshToken, setTokens } from '@/utils/secureStore';
 import axios from 'axios';
 import { apiRoutes } from './apiRoutes';
 
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
+	baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,
+	headers: { 'Content-Type': 'application/json' },
 });
 
 api.interceptors.request.use(async (config) => {
-  const token = await getAccessToken();
+	const token = await getAccessToken();
 
-  if (token) {
-      config.headers = config.headers ?? {};
-      config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+	if (token) {
+		config.headers = config.headers ?? {};
+		config.headers.Authorization = `Bearer ${token}`;
+	}
+	return config;
 }, (error) => {
-  return Promise.reject(new Error(error));
+  	return Promise.reject(new Error(error));
 });
 
 // Response Interceptor: Refresh token on 401
@@ -47,8 +47,12 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccess}`;
         return api(originalRequest);
       } catch (err: any) {
-        const { logout } = useAuth();
-        logout();
+        // let AuthProvider handle a full logout (clearing storage, clearing queries, etc.)
+        try {
+          await triggerLogout();
+        } catch (e) {
+          console.warn("triggerLogout failed", e);
+        }
         return Promise.reject(new Error(err));
       }
     }

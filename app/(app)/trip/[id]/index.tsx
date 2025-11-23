@@ -1,20 +1,26 @@
 import BottomModal from "@/components/ui/bottomModal";
 import { Button } from "@/components/ui/button";
-import { BText, RText } from "@/components/ui/text";
+import { BText } from "@/components/ui/text";
+import { COLORS } from "@/constants/colors";
+import { ICONS } from "@/constants/icons";
 import { useGetTripMembers } from "@/features/trips/api/get-members";
+import { useGetSharedItems } from "@/features/trips/api/get-shared-items";
 import { useGetTripDetails } from "@/features/trips/api/get-trip-details";
 import Details from "@/features/trips/components/Details";
+import SharedList from "@/features/trips/components/SharedList";
 import TripMemebers from "@/features/trips/components/TripMemebers";
 import { useToast } from "@/hooks/useToast";
-import { getDistance } from "@/utils/dateFormatter";
+import { TripMemberColorsProvider } from "@/providers/TripMemberColorsProvider";
 import { getErrorMessage } from "@/utils/errorMessage";
 import { getThumbnailSource } from "@/utils/thumbnailHelper";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useRef } from "react";
 import {
 	ActivityIndicator,
 	ImageBackground,
+	Pressable,
+	RefreshControl,
 	ScrollView,
 	View,
 } from "react-native";
@@ -28,13 +34,22 @@ export default function TripDetails() {
 		data: trip,
 		isPending: isTripLoading,
 		error: tripDetailsError,
+		refetch: refetchTripDetails,
 	} = useGetTripDetails(id);
 
 	const {
 		data: members = [],
 		isPending: isMembersLoading,
 		error: tripMembersError,
+		refetch: refetchTripMembers,
 	} = useGetTripMembers(id);
+
+	const {
+		data: sharedItems = [],
+		isPending: isSharedItemsLoading,
+		error: sharedItemsError,
+		refetch: refetchSharedItems,
+	} = useGetSharedItems(id);
 
 	const { showToast } = useToast();
 
@@ -48,13 +63,20 @@ export default function TripDetails() {
 		}
 	}, [tripDetailsError]);
 
+	const imageHeight = 224;
+
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
 
 	const openModal = useCallback(() => {
 		bottomSheetRef.current?.present();
 	}, []);
 
-	const imageHeight = 224;
+	const onReload = () => {
+		// Refetch all data
+		refetchTripDetails();
+		refetchTripMembers();
+		refetchSharedItems();
+	};
 
 	if (isTripLoading || !trip)
 		return (
@@ -72,7 +94,6 @@ export default function TripDetails() {
 					left: 0,
 					right: 0,
 					height: imageHeight,
-					zIndex: 1,
 				}}
 			>
 				<View
@@ -83,15 +104,42 @@ export default function TripDetails() {
 				/>
 				<View
 					style={{
-						justifyContent: "flex-end",
+						justifyContent: "space-between",
+						alignItems: "center",
 						flexDirection: "row",
 						marginHorizontal: 16,
 						marginTop: 8,
+						zIndex: 50,
 					}}
 				>
-					<RText className='bg-primary px-4 rounded-full'>
-						{getDistance(trip.startDate)}
-					</RText>
+					{/* Add go back navigation */}
+					<Link href='/(app)/(tabs)' asChild>
+						<Pressable hitSlop={10} accessibilityRole='button'>
+							{({ pressed }) => (
+								<View
+									className={`rounded-full h-12 w-12 items-center justify-center ${
+										pressed
+											? "bg-secondary"
+											: "bg-background"
+									}`}
+								>
+									{ICONS.chevronLeft(
+										24,
+										COLORS.secondary.foreground
+									)}
+								</View>
+							)}
+						</Pressable>
+					</Link>
+					<Button
+						size={"iconMedium"}
+						color={"secondary"}
+						variant='flat'
+						className={`items-center rounded-full`}
+						onPress={openModal}
+					>
+						{ICONS.settings(20, COLORS.secondary.foreground)}
+					</Button>
 				</View>
 			</ImageBackground>
 
@@ -99,20 +147,37 @@ export default function TripDetails() {
 			<ScrollView
 				contentContainerStyle={{
 					paddingTop: imageHeight - 24,
+					paddingBottom: 32,
 				}}
 				style={{
 					flex: 1,
 					zIndex: 2,
 				}}
+				refreshControl={
+					<RefreshControl
+						onRefresh={onReload}
+						refreshing={
+							isTripLoading ||
+							isMembersLoading ||
+							isSharedItemsLoading
+						}
+						colors={[COLORS.accent.light]}
+						progressBackgroundColor={COLORS.secondary.DEFAULT}
+						tintColor={COLORS.accent.light}
+					/>
+				}
 			>
 				<View className='rounded-[24px] py-4 bg-background'>
-					<Details trip={trip} />
-					<TripMemebers members={members} />
+					<TripMemberColorsProvider members={members}>
+						<Details trip={trip} />
+						<TripMemebers members={members} />
+						<SharedList
+							items={sharedItems}
+							isLoading={isSharedItemsLoading}
+						/>
+					</TripMemberColorsProvider>
 				</View>
 			</ScrollView>
-			<Button onPress={openModal}>
-				<BText>Open</BText>
-			</Button>
 
 			<BottomModal
 				ref={bottomSheetRef}

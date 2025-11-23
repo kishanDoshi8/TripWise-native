@@ -1,8 +1,25 @@
 import { User, userSchema } from '@/types';
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from "react-native";
 
-export const getAccessToken = async () => await SecureStore.getItemAsync("accessToken");
-export const getRefreshToken = async () => await SecureStore.getItemAsync("refreshToken");
+export const getAccessToken = async () => {
+    if (Platform.OS === "web") {
+        return localStorage.getItem("accessToken");
+    }
+    return await SecureStore.getItemAsync("accessToken");
+};
+
+export const getRefreshToken = async () => {
+    return await SecureStore.getItemAsync("refreshToken");
+}
+
+export const setAccessToken = async (token: string) => {
+    if (Platform.OS === "web") {
+        localStorage.setItem("accessToken", token);
+    } else {
+        await SecureStore.setItemAsync("accessToken", token);
+    }
+};
 
 export const setTokens = async (access: string, refresh: string) => {
     await SecureStore.setItemAsync("accessToken", access);
@@ -21,13 +38,24 @@ export const setUser = async (user: User) => {
 }
 
 export const getUser = async (): Promise<User | null> => {
-    const userJson = await SecureStore.getItemAsync('user');
-    if (userJson) {
-        const user = userSchema.parse(JSON.parse(userJson));
-        return user;
+    try {
+        let userJson: string | null = null;
+
+        if (Platform.OS === "web") {
+            userJson = localStorage.getItem("user");
+        } else {
+            userJson = await SecureStore.getItemAsync("user");
+        }
+
+        if (!userJson) return null;
+
+        const parsed = JSON.parse(userJson);
+        return userSchema.parse(parsed);
+    } catch (error) {
+        console.warn("Failed to load user:", error);
+        return null;
     }
-    return null;
-}
+};
 
 export const clearUser = async () => {
     await SecureStore.deleteItemAsync("user");

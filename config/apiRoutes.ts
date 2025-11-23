@@ -17,5 +17,6 @@ export const apiRoutes = {
         declineTrip: (tripId: string) => ({ url: `/trips/${tripId}/respond`, method: 'POST', data: { response: 'Declined' } }),
         details: (tripId: string) => ({ url: `/trips/${tripId}`, method: 'GET', }),
         members: (tripId: string) => ({ url: `/trips/${tripId}/members`, method: 'GET' }),
+        sharedItems: (tripId: string) => ({ url: `/packing-items/${tripId}/shared`, method: 'GET' }),
     },
 }
