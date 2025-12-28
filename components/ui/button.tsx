@@ -285,6 +285,7 @@ function Button({
 			})}
 		>
 			<Pressable
+				style={{ userSelect: "none" }}
 				className={cn(
 					isDisabled && "opacity-70 web:pointer-events-none",
 					fullWidth ? "w-full" : "self-start",
@@ -294,7 +295,10 @@ function Button({
 				accessibilityRole='button'
 				{...props}
 			>
-				<View className={`flex-row gap-2 items-center justify-center`}>
+				<View
+					pointerEvents='none'
+					className='flex-row gap-2 items-center justify-center select-none'
+				>
 					{isLoading && (
 						<ActivityIndicator color={COLORS.accent.light} />
 					)}

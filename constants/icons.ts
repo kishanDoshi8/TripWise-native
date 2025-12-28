@@ -27,6 +27,7 @@ export const ICONS = {
 	options: createIcon(AntDesign, 'ellipsis'),
 	notes: createIcon(MaterialIcons, 'notes'),
 	delete: createIcon(MaterialIcons, 'delete'),
+	remove: createIcon(MaterialIcons, 'remove'),
 };
 
 
