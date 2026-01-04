@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import SafeArea from "@/components/ui/safeArea";
@@ -20,7 +19,7 @@ import {
 	View,
 } from "react-native";
 
-export default function Home() {
+export default function Trips() {
 	const { user, setLastSelectedTrip } = useAuth();
 	const router = useRouter();
 	const { showToast } = useToast();
@@ -56,7 +55,7 @@ export default function Home() {
 
 	const handleTripNavigate = (tripId: string) => {
 		setLastSelectedTrip(tripId);
-		router.push(`/(app)/trip/${tripId}`);
+		router.push(`/(app)/trips/${tripId}/(tabs)`);
 	};
 
 	useEffect(() => {
@@ -69,6 +68,7 @@ export default function Home() {
 		<SafeArea className='flex-1 bg-background'>
 			<ScrollView
 				stickyHeaderIndices={[1]}
+				className={`pb-8`}
 				refreshControl={
 					<RefreshControl
 						onRefresh={onReload}
@@ -80,37 +80,24 @@ export default function Home() {
 				}
 			>
 				<View
-					className={`bg-secondary-dark px-4 pt-8 flex-row items-center justify-between`}
+					className={`bg-secondary-dark py-8 flex-row items-center justify-between`}
 				>
-					<View>
-						<BText className='text-2xl'>
-							Hey, {user.displayName}!
-						</BText>
-						<RText className='text-secondary-light'>
-							Ready for your next adventure?
-						</RText>
+					<View className={`m-auto`}>
+						<BText className='text-2xl'>Trips</BText>
 					</View>
-					<Avatar alt='Profile picture'>
-						<AvatarFallback>
-							<RText className={`capitalize`}>
-								{user.displayName.charAt(0)}
-							</RText>
-						</AvatarFallback>
-					</Avatar>
 				</View>
-				<View className='py-4 bg-secondary-dark px-4'>
-					<Input
-						placeholder='Search'
-						className='rounded-full'
-						icon={ICONS.search(20)}
-						value={search}
-						onChangeText={setSearch}
-						aria-labelledby='Search'
-					/>
-				</View>
-				<View className={`p-8`}>
-					<BText className={`text-xl pb-4`}>My Trips</BText>
+				<View className={`p-4`}>
 					<View className={`flex-1 gap-8`}>
+						<View>
+							<Input
+								placeholder='Search'
+								className='rounded-full'
+								icon={ICONS.search(20)}
+								value={search}
+								onChangeText={setSearch}
+								aria-labelledby='Search'
+							/>
+						</View>
 						{filteredTrips?.map((trip) => (
 							<TouchableOpacity
 								key={trip.id}
@@ -138,9 +125,16 @@ export default function Home() {
 						)}
 				</View>
 			</ScrollView>
-			<View className={`absolute bottom-8 right-8 z-50 overflow-visible`}>
-				<Button size={"iconLarge"} className={`rounded-full p-0`}>
-					{ICONS.add(32, "white")}
+			<View className={`absolute bottom-8 left-8 right-8`}>
+				<Button
+					fullWidth
+					variant='solid'
+					color={"primary"}
+					size={"lg"}
+					onPress={() => router.push(`/(app)/trips/new`)}
+					icon={ICONS.add(32, COLORS.foreground)}
+				>
+					<RText>Create New Trip</RText>
 				</Button>
 			</View>
 		</SafeArea>

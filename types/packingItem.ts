@@ -15,3 +15,11 @@ export const ItemSchema = z.object({
     assignees: z.array(memberUserSchema).nullish(),
 });
 export type Item = z.infer<typeof ItemSchema>;
+
+export const DeleteItemSchema = z.object({
+    id: z.string().min(1),
+    tripId: z.string().min(1),
+    isPersonal: z.boolean().default(false),
+})
+
+export type DeleteItem = z.infer<typeof DeleteItemSchema>;

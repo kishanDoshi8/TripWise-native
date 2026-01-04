@@ -26,7 +26,8 @@ export default function TripInvite({ trip }: Readonly<Props>) {
 	const onJoinTrip = () => {
 		joinTrip(trip.id, {
 			onSuccess: (tripId: string) => {
-				router.push(`/(app)/trip/${tripId}`);
+				router.push(`/(app)/trips`);
+				// router.push(`/(app)/trip/${tripId}`);
 			},
 			onError: (error) => {
 				showToast({

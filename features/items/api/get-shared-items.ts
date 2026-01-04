@@ -8,7 +8,11 @@ export const useGetSharedItems = (tripId: string) => {
     return useQuery<Item[]>({
         queryFn: async () => {
             const res = await api.request<{ items: Item[] }>(apiRoutes.trip.sharedItems(tripId));
-            return ItemSchema.array().parse(res.data.items);
+            const i = ItemSchema.array().safeParse(res.data.items);
+            if (!i.success) {
+                throw new Error('Failed to parse shared items');
+            }
+            return i.data;
         },
         queryKey: KEYS.trip.sharedItems(tripId),
         enabled: !!tripId,

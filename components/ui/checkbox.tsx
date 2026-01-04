@@ -30,7 +30,7 @@ function Checkbox({
 				props.disabled && "opacity-50",
 				className
 			)}
-			style={[{ width: 24, height: 24 }, (props as any).style]}
+			style={[{ width: 20, height: 20 }, (props as any).style]}
 			hitSlop={DEFAULT_HIT_SLOP}
 			{...props}
 		>

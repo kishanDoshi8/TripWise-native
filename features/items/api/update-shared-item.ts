@@ -4,13 +4,13 @@ import { KEYS } from '@/constants/queryKeys';
 import { Item, ItemSchema } from '@/types/packingItem';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-type UpdateItem = {
+type UpdateItemType = {
     itemId: string;
     tripId: string;
     data: Partial<Item>;
 };
 
-const updateItem = async ({ itemId, data }: UpdateItem): Promise<Item> => {
+const updateItem = async ({ itemId, data }: UpdateItemType): Promise<Item> => {
     const res = await api.request<{ item: Item }>({
         url: apiRoutes.trip.updateSharedItem(itemId).url,
         method: apiRoutes.trip.updateSharedItem(itemId).method,
@@ -22,7 +22,7 @@ const updateItem = async ({ itemId, data }: UpdateItem): Promise<Item> => {
 export const useUpdateSharedItem = () => {
     const queryClient = useQueryClient();
 
-    return useMutation<Item, Error, UpdateItem, { previous?: Item[] }>({
+    return useMutation<Item, Error, UpdateItemType, { previous?: Item[] }>({
         mutationFn: updateItem,
         onMutate: async ({ itemId, tripId, data }) => {
         await queryClient.cancelQueries({ queryKey: KEYS.trip.sharedItems(tripId) });

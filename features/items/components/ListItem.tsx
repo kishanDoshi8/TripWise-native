@@ -1,41 +1,23 @@
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordian";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RText } from "@/components/ui/text";
-import { COLORS } from "@/constants/colors";
-import { ICONS } from "@/constants/icons";
 import { useTripMemberColors } from "@/providers/TripMemberColorsProvider";
 import { Item } from "@/types/packingItem";
 import React from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { useUpdateSharedItem } from "../api/update-shared-item";
+import { ItemModalOptions } from "./SharedList";
 
 type Props = {
 	item: Item;
-	setUpdateQuantityItem: (item: Item) => void;
-	setUpdateAssigneeItem: (item: Item) => void;
+	onPress: (options?: ItemModalOptions) => void;
 };
 
-export function ListItem({
-	item,
-	setUpdateQuantityItem,
-	setUpdateAssigneeItem,
-}: Readonly<Props>) {
-	const memberColors = useTripMemberColors();
+const ListItem = ({ item, onPress }: Readonly<Props>) => {
 	const { mutate: updateItem } = useUpdateSharedItem();
+	const memberColors = useTripMemberColors();
 
-	const handleQuantityUpdate = () => {
-		setUpdateQuantityItem(item);
-	};
-
-	const handleAssigneeUpdate = () => {
-		setUpdateAssigneeItem(item);
-	};
+	const showMembersLength = 3;
 
 	const toggleChecked = () => {
 		const nextValue = !item.packedStatus;
@@ -48,98 +30,77 @@ export function ListItem({
 	};
 
 	return (
-		<View>
-			<Accordion type='single' collapsible>
-				<AccordionItem value={item.id}>
-					<AccordionTrigger
-						className={`flex-row gap-3`}
-						showIcon={false}
-					>
-						<Checkbox
-							id={item.id}
-							checked={item.packedStatus}
-							onCheckedChange={toggleChecked}
-							className='mt-[6px]'
-						/>
-						<View className={`flex-1`}>
-							<View
-								className={`gap-3 flex-row items-center justify-between`}
-							>
-								<RText className='text-lg'>{item.name}</RText>
-								{item.quantity > 0 && (
-									<Button
-										variant={"flat"}
-										color={"accent"}
-										size={"icon"}
-										onPress={handleQuantityUpdate}
+		<View className={`flex-row gap-3 px-5 py-3`}>
+			<Checkbox
+				id={item.id}
+				checked={item.packedStatus}
+				onCheckedChange={toggleChecked}
+				className='mt-[5px]'
+			/>
+			<Pressable onPress={() => onPress()} className={`flex-1 gap-1`}>
+				<View className={`gap-3 flex-row justify-between`}>
+					<RText className='py-1'>{item.name}</RText>
+					{item.quantity > 1 && (
+						<Button
+							className={`self-end`}
+							variant={"flat"}
+							color={"accent"}
+							size={"iconSmall"}
+							onPress={() => onPress()}
+						>
+							<RText>{item.quantity}</RText>
+						</Button>
+					)}
+				</View>
+				{item.assignees && item.assignees.length > 0 && (
+					<View className={`flex-row gap-3 flex-wrap`}>
+						{item.assignees?.map(
+							(assignee, i) =>
+								i < showMembersLength - 1 && (
+									<Pressable
+										onPress={() =>
+											onPress({ showAssignees: true })
+										}
+										key={assignee.id}
+										className={`text-sm items-center justify-center rounded-full py-1 px-[10px] w-min`}
+										style={{
+											backgroundColor:
+												memberColors[assignee.id] +
+												"33", // 33 for 20% opacity
+										}}
 									>
-										<RText>{item.quantity}</RText>
-									</Button>
-								)}
-							</View>
-							{item.assignees && item.assignees.length > 0 && (
-								<View className={`flex-row gap-3 flex-wrap`}>
-									{item.assignees?.map(
-										(assignee, i) =>
-											i < 3 && (
-												<View
-													key={assignee.id}
-													className={`text-sm items-center justify-center rounded-full py-1 px-[10px] w-min`}
-													style={{
-														backgroundColor:
-															memberColors[
-																assignee.id
-															] + "33", // 33 for 20% opacity
-													}}
-												>
-													<RText
-														className='text-sm'
-														style={{
-															color: memberColors[
-																assignee.id
-															],
-														}}
-													>
-														{assignee.displayName}
-													</RText>
-												</View>
-											)
-									)}
-								</View>
-							)}
-						</View>
-					</AccordionTrigger>
-					<AccordionContent>
-						<View className={`flex-row flex-wrap gap-4 ml-9`}>
+										<RText
+											className='text-sm'
+											style={{
+												color: memberColors[
+													assignee.id
+												],
+											}}
+										>
+											{assignee.displayName}
+										</RText>
+									</Pressable>
+								)
+						)}
+						{item.assignees.length > showMembersLength - 1 && (
 							<Button
+								className={`rounded-full`}
 								variant={"bordered"}
-								size={"sm"}
-								onPress={handleAssigneeUpdate}
-							>
-								<RText className='text-sm'>Assign</RText>
-							</Button>
-							<Button variant={"bordered"} size={"sm"}>
-								<RText className='text-sm'>$$</RText>
-							</Button>
-							<Button variant={"bordered"} size={"sm"}>
-								<RText className='text-sm'>
-									{ICONS.notes(14, COLORS.primary.DEFAULT)}
-								</RText>
-							</Button>
-							<Button
-								variant={"bordered"}
-								color={"danger"}
+								color={"secondary"}
 								size={"iconSmall"}
-								className={`ml-auto`}
+								onPress={() => onPress({ showAssignees: true })}
 							>
-								<RText className='text-sm'>
-									{ICONS.delete(14, COLORS.danger.DEFAULT)}
+								<RText>
+									{item.assignees.length -
+										(showMembersLength - 1)}
 								</RText>
 							</Button>
-						</View>
-					</AccordionContent>
-				</AccordionItem>
-			</Accordion>
+						)}
+					</View>
+				)}
+			</Pressable>
 		</View>
 	);
-}
+};
+
+export default ListItem;

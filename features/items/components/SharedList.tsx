@@ -1,96 +1,69 @@
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordian";
-import Spinner from "@/components/ui/Spinner";
 import { BText } from "@/components/ui/text";
+import { useBottomSheetBackHandler } from "@/hooks/useBottomSheetBackHandler";
 import { Item } from "@/types/packingItem";
-import React, { useState } from "react";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useLocalSearchParams } from "expo-router";
+import React, { useEffect } from "react";
 import { FlatList, View } from "react-native";
-import { ListItem } from "./ListItem";
-import { UpdateAssignees } from "./UpdateAssignees";
-import UpdateQuantity from "./UpdateQuantity";
+import { useGetSharedItems } from "../api/get-shared-items";
+import ItemModal from "./ItemModal";
+import ListItem from "./ListItem";
 
-type Props = {
-	items: Item[];
-	isLoading: boolean;
+export type ItemModalOptions = {
+	showAssignees?: boolean;
 };
 
-export default function SharedList({ items, isLoading }: Readonly<Props>) {
-	const [updateQuantityItem, setUpdateQuantityItem] = useState<Item | null>(
-		null
-	);
+const SharedList = () => {
+	const { id }: { id: string } = useLocalSearchParams();
 
-	const [updateAssigneeItem, setUpdateAssigneeItem] = useState<Item | null>(
-		null
-	);
+	const [activeItem, setActiveItem] = React.useState<Item | null>(null);
+	const [openAssignees, setOpenAssignees] = React.useState<boolean>(false);
+	const bottomSheetRef = React.useRef<BottomSheetModal>(null);
 
-	const onCloseSheet = () => {
-		setUpdateQuantityItem(null);
-		setUpdateAssigneeItem(null);
-	};
+	useBottomSheetBackHandler(!!activeItem, () => {
+		bottomSheetRef.current?.dismiss();
+	});
+
+	const {
+		data: items = [],
+		isPending: isSharedItemsLoading,
+		// error: sharedItemsError,
+		refetch: refetchSharedItems,
+	} = useGetSharedItems(id);
+
+	useEffect(() => {
+		refetchSharedItems();
+	}, [id]);
 
 	return (
-		<View className={`p-4 bg-secondary-dark mt-8`}>
-			<Accordion type='single' collapsible defaultValue={"item-1"}>
-				<AccordionItem value='item-1'>
-					<AccordionTrigger>
-						<BText size='xl'>Shared List</BText>
-					</AccordionTrigger>
-					<AccordionContent>
-						{isLoading ? (
-							<Spinner />
-						) : (
-							<View>
-								<FlatList
-									data={items}
-									keyExtractor={(item) => item.id}
-									renderItem={({ item }) => (
-										<ListItem
-											key={item.id}
-											item={item}
-											setUpdateQuantityItem={
-												setUpdateQuantityItem
-											}
-											setUpdateAssigneeItem={
-												setUpdateAssigneeItem
-											}
-										/>
-									)}
-								/>
-								{/* {items.map((item) => (
-									<ListItem
-										key={item.id}
-										item={item}
-										setUpdateQuantityItem={
-											setUpdateQuantityItem
-										}
-										setUpdateAssigneeItem={
-											setUpdateAssigneeItem
-										}
-									/>
-								))} */}
-							</View>
-						)}
-					</AccordionContent>
-				</AccordionItem>
-			</Accordion>
+		<View>
+			<FlatList
+				data={items}
+				ListHeaderComponent={<BText size={"xl2"}>Shared Items</BText>}
+				ListHeaderComponentClassName='pt-4 px-4'
+				refreshing={isSharedItemsLoading}
+				onRefresh={refetchSharedItems}
+				keyExtractor={(item) => item.id}
+				renderItem={({ item }) => (
+					<ListItem
+						item={item}
+						onPress={(options?: ItemModalOptions) => {
+							setOpenAssignees(options?.showAssignees ?? false);
+							setActiveItem(item);
+						}}
+					/>
+				)}
+			/>
 
-			{updateQuantityItem && (
-				<UpdateQuantity
-					item={updateQuantityItem}
-					onDismiss={onCloseSheet}
-				/>
-			)}
-
-			{updateAssigneeItem && (
-				<UpdateAssignees
-					item={updateAssigneeItem}
-					onDismiss={onCloseSheet}
+			{activeItem && (
+				<ItemModal
+					activeItem={activeItem}
+					onDismiss={() => setActiveItem(null)}
+					showAssigness={openAssignees}
 				/>
 			)}
 		</View>
 	);
-}
+};
+
+export default SharedList;

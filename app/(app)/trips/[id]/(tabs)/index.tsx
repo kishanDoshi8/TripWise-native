@@ -3,11 +3,10 @@ import { Button } from "@/components/ui/button";
 import { BText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
-import { useGetTripMembers } from "@/features/trips/api/get-members";
 import { useGetSharedItems } from "@/features/items/api/get-shared-items";
+import { useGetTripMembers } from "@/features/trips/api/get-members";
 import { useGetTripDetails } from "@/features/trips/api/get-trip-details";
 import Details from "@/features/trips/components/Details";
-import SharedList from "@/features/items/components/SharedList";
 import TripMemebers from "@/features/trips/components/TripMemebers";
 import { useItemSocket } from "@/features/trips/hooks/useItemSocket";
 import { useTripSocket } from "@/features/trips/hooks/useTripSocket";
@@ -49,12 +48,7 @@ export default function TripDetails() {
 		refetch: refetchTripMembers,
 	} = useGetTripMembers(id);
 
-	const {
-		data: sharedItems = [],
-		isPending: isSharedItemsLoading,
-		// error: sharedItemsError,
-		refetch: refetchSharedItems,
-	} = useGetSharedItems(id);
+	const { refetch: refetchSharedItems } = useGetSharedItems(id);
 
 	const { showToast } = useToast();
 
@@ -160,11 +154,7 @@ export default function TripDetails() {
 				refreshControl={
 					<RefreshControl
 						onRefresh={onReload}
-						refreshing={
-							isTripLoading ||
-							isMembersLoading ||
-							isSharedItemsLoading
-						}
+						refreshing={isTripLoading || isMembersLoading}
 						colors={[COLORS.accent.light]}
 						progressBackgroundColor={COLORS.secondary.DEFAULT}
 						tintColor={COLORS.accent.light}
@@ -175,10 +165,6 @@ export default function TripDetails() {
 					<TripMemberColorsProvider members={members}>
 						<Details trip={trip} />
 						<TripMemebers members={members} />
-						<SharedList
-							items={sharedItems}
-							isLoading={isSharedItemsLoading}
-						/>
 					</TripMemberColorsProvider>
 				</View>
 			</ScrollView>

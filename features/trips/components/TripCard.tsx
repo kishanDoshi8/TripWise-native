@@ -1,6 +1,7 @@
 import { BText, RText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
+import { useAuth } from "@/providers/AuthProvider";
 import { Trip } from "@/types/trip";
 import { getDistance, getDuration, getRange } from "@/utils/dateFormatter";
 import { getThumbnailSource } from "@/utils/thumbnailHelper";
@@ -14,6 +15,10 @@ type Props = {
 };
 
 export default function TripCard({ trip, styles }: Readonly<Props>) {
+	const { user } = useAuth();
+
+	if (!user) return null;
+
 	return (
 		<ImageBackground
 			source={getThumbnailSource(trip.thumbnail)}
@@ -42,12 +47,20 @@ export default function TripCard({ trip, styles }: Readonly<Props>) {
 
 			<View
 				style={{
-					justifyContent: "flex-end",
+					justifyContent:
+						user.lastTripId == trip.id
+							? "space-between"
+							: "flex-end",
 					flexDirection: "row",
 					marginHorizontal: 16,
 					marginTop: 8,
 				}}
 			>
+				{user.lastTripId == trip.id && (
+					<RText className={`bg-accent px-4 rounded-full mr-2`}>
+						selected
+					</RText>
+				)}
 				<RText className={`bg-primary px-4 rounded-full`}>
 					{getDistance(trip.startDate)}
 				</RText>

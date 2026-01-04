@@ -15,7 +15,7 @@ export default function AuthLayout() {
 
 	useEffect(() => {
 		if (isAuthenticated) {
-			router.replace({ pathname: "/(app)/(tabs)" });
+			router.replace({ pathname: "/(app)/trips" });
 		}
 	}, [isAuthenticated, token, isLoading]);
 

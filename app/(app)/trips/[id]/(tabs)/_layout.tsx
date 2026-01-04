@@ -1,22 +1,13 @@
 import { BText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
-import { useAuth } from "@/providers/AuthProvider";
-import { Tabs, useRouter } from "expo-router";
-import React, { useEffect } from "react";
-
-let hasRedirected = false;
+import { Tabs, useLocalSearchParams } from "expo-router";
+import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabsLayout() {
-	const { user } = useAuth();
-	const router = useRouter();
-
-	useEffect(() => {
-		if (user?.lastTripId && !hasRedirected) {
-			hasRedirected = true;
-			router.push(`/trip/${user.lastTripId}`);
-		}
-	}, [user]);
+	const { id }: { id: string } = useLocalSearchParams();
+	const insets = useSafeAreaInsets();
 
 	return (
 		<Tabs
@@ -27,6 +18,7 @@ export default function TabsLayout() {
 					borderTopWidth: 0,
 					height: 72,
 					paddingTop: 8,
+					paddingBottom: insets.bottom + 32 || 16,
 				},
 			}}
 		>
@@ -41,53 +33,58 @@ export default function TabsLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name='invites'
+				name='shared'
 				options={{
 					title: "Invites",
+					href: {
+						pathname: `/trips/[id]/shared`,
+						params: { id },
+					},
 					headerShown: false,
 					tabBarIcon: ({ focused }) => (
-						<BText>
-							{ICONS.invite(
-								24,
-								focused
-									? COLORS.primary.light
-									: COLORS.secondary.light
-							)}
-						</BText>
+						<TabBarIcon icon={ICONS.groups} focused={focused} />
 					),
 				}}
 			/>
 			<Tabs.Screen
-				name='completed'
+				name='personal'
 				options={{
-					title: "Completed",
+					title: "Personal",
+					href: {
+						pathname: `/trips/[id]/personal`,
+						params: { id },
+					},
 					headerShown: false,
 					tabBarIcon: ({ focused }) => (
-						<BText>
-							{ICONS.recent(
-								24,
-								focused
-									? COLORS.primary.light
-									: COLORS.secondary.light
-							)}
-						</BText>
+						<TabBarIcon icon={ICONS.list} focused={focused} />
 					),
 				}}
 			/>
 			<Tabs.Screen
-				name='more'
+				name='expense'
 				options={{
-					title: "More",
+					title: "Expenses",
+					href: {
+						pathname: `/trips/[id]/expense`,
+						params: { id },
+					},
 					headerShown: false,
 					tabBarIcon: ({ focused }) => (
-						<BText>
-							{ICONS.more(
-								24,
-								focused
-									? COLORS.primary.light
-									: COLORS.secondary.light
-							)}
-						</BText>
+						<TabBarIcon icon={ICONS.money} focused={focused} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name='profile'
+				options={{
+					title: "Profile",
+					href: {
+						pathname: `/trips/[id]/profile`,
+						params: { id },
+					},
+					headerShown: false,
+					tabBarIcon: ({ focused }) => (
+						<TabBarIcon icon={ICONS.person} focused={focused} />
 					),
 				}}
 			/>

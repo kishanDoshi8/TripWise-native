@@ -2,5 +2,5 @@ import { Redirect } from "expo-router";
 import React from "react";
 
 export default function App() {
-	return <Redirect href={"/(app)/(tabs)"} />;
+	return <Redirect href={"/(app)/trips"} />;
 }

@@ -13,7 +13,9 @@ export default function SafeArea({ children, ...props }: Readonly<Props>) {
 			style={{ flex: 1, backgroundColor: COLORS.secondary.dark }}
 			edges={["top"]}
 		>
-			<View {...props}>{children}</View>
+			<View style={{ flex: 1 }} {...props}>
+				{children}
+			</View>
 		</SafeAreaView>
 	);
 }

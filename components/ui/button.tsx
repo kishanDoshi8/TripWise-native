@@ -20,6 +20,7 @@ const buttonVariants = cva(
 				solid: "",
 				bordered: "border",
 				flat: "",
+				ghost: "",
 			},
 			size: {
 				default: "h-10 px-4 py-2 native:h-12 native:px-5 native:py-3",
@@ -121,6 +122,37 @@ const buttonVariants = cva(
 				className:
 					"bg-accent-dark web:hover:opacity-90 active:opacity-90",
 			},
+			// Ghost
+			{
+				variant: "ghost",
+				color: "default",
+				className:
+					"bg-transparent web:hover:opacity-90 active:opacity-90",
+			},
+			{
+				variant: "ghost",
+				color: "primary",
+				className:
+					"bg-transparent web:hover:opacity-90 active:opacity-90",
+			},
+			{
+				variant: "ghost",
+				color: "secondary",
+				className:
+					"bg-transparent web:hover:opacity-90 active:opacity-90",
+			},
+			{
+				variant: "ghost",
+				color: "danger",
+				className:
+					"bg-transparent web:hover:opacity-90 active:opacity-90",
+			},
+			{
+				variant: "ghost",
+				color: "accent",
+				className:
+					"bg-transparent web:hover:opacity-90 active:opacity-90",
+			},
 		],
 		defaultVariants: {
 			variant: "solid",
@@ -138,6 +170,7 @@ const buttonTextVariants = cva(
 				solid: "",
 				bordered: "",
 				flat: "",
+				ghost: "",
 			},
 			color: {
 				default: "",
@@ -243,6 +276,35 @@ const buttonTextVariants = cva(
 			},
 			{
 				variant: "flat",
+				color: "accent",
+				className: "text-accent-light web:opacity-90 active:opacity-90",
+			},
+			// Ghost
+			{
+				variant: "ghost",
+				color: "default",
+				className:
+					"text-default-light web:opacity-90 active:opacity-90",
+			},
+			{
+				variant: "ghost",
+				color: "primary",
+				className:
+					"text-primary-light web:opacity-90 active:opacity-90",
+			},
+			{
+				variant: "ghost",
+				color: "secondary",
+				className:
+					"text-secondary-light web:opacity-90 active:opacity-90",
+			},
+			{
+				variant: "ghost",
+				color: "danger",
+				className: "text-danger-light web:opacity-90 active:opacity-90",
+			},
+			{
+				variant: "ghost",
 				color: "accent",
 				className: "text-accent-light web:opacity-90 active:opacity-90",
 			},

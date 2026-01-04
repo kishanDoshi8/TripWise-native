@@ -5,7 +5,7 @@ import React from 'react';
 export const ICONS = {
 	logo: createIcon(MaterialIcons, 'hiking'),
   	back: createIcon(MaterialIcons, 'arrow-back'),
-	home: createIcon(AntDesign, 'home'),
+	home: createIcon(MaterialIcons, 'home'),
 	invite: createIcon(Ionicons, 'paper-plane-outline'),
 	addCircle: createIcon(AntDesign, 'pluscircleo'),
 	add: createIcon(MaterialIcons, 'add'),
@@ -28,6 +28,10 @@ export const ICONS = {
 	notes: createIcon(MaterialIcons, 'notes'),
 	delete: createIcon(MaterialIcons, 'delete'),
 	remove: createIcon(MaterialIcons, 'remove'),
+	groups: createIcon(MaterialIcons, 'groups'),
+	person: createIcon(MaterialIcons, 'person'),
+	money: createIcon(MaterialIcons, 'attach-money'),
+	list: createIcon(MaterialIcons, 'checklist'),
 };
 
 
