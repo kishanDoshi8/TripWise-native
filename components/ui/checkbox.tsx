@@ -40,7 +40,7 @@ function Checkbox({
 					indicatorClassName
 				)}
 			>
-				{ICONS.check(16, COLORS.primary.foreground)}
+				{ICONS.check(14, COLORS.primary.foreground)}
 			</CheckboxPrimitive.Indicator>
 		</CheckboxPrimitive.Root>
 	);

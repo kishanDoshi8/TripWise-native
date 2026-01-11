@@ -10,7 +10,7 @@ type Props = {
 export default function SafeArea({ children, ...props }: Readonly<Props>) {
 	return (
 		<SafeAreaView
-			style={{ flex: 1, backgroundColor: COLORS.secondary.dark }}
+			style={{ flex: 1, backgroundColor: COLORS.background }}
 			edges={["top"]}
 		>
 			<View style={{ flex: 1 }} {...props}>

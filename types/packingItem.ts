@@ -13,6 +13,7 @@ export const ItemSchema = z.object({
     addedBy: memberUserSchema,
     createdAt: z.coerce.date(),
     assignees: z.array(memberUserSchema).nullish(),
+    checklistId: z.string().nullish(),
 });
 export type Item = z.infer<typeof ItemSchema>;
 

@@ -20,5 +20,8 @@ export const apiRoutes = {
         sharedItems: (tripId: string) => ({ url: `/packing-items/${tripId}/shared`, method: 'GET' }),
         updateSharedItem: (itemId: string) => ({ url: `/packing-items/${itemId}`, method: 'PATCH' }),
         deleteItem: (itemId: string) => ({ url: `/packing-items/${itemId}`, method: 'DELETE' }),
+        checklists: (tripId: string) => ({ url: `/checklists/${tripId}`, method: 'GET' }),
+        createChecklist: (tripId: string) => ({ url: `/checklists/${tripId}`, method: 'POST' }),
+        updateChecklist: (checklistId: string) => ({ url: `/checklists/${checklistId}`, method: 'PATCH' }),
     },
 }

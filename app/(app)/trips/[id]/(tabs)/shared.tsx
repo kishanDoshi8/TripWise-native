@@ -1,14 +1,19 @@
 import SafeArea from "@/components/ui/safeArea";
 import { RText } from "@/components/ui/text";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { useGetSharedItems } from "@/features/items/api/get-shared-items";
 import SharedList from "@/features/items/components/SharedList";
 import { useGetTripMembers } from "@/features/trips/api/get-members";
 import { TripMemberColorsProvider } from "@/providers/TripMemberColorsProvider";
-import { useLocalSearchParams } from "expo-router";
+import { setItem } from "@/utils/asyncStore";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 
 const TripShared = () => {
 	const { id }: { id: string } = useLocalSearchParams();
+	useFocusEffect(() => {
+		setItem(STORAGE_KEYS.UI.SELECTED_TAB, "shared");
+	});
 
 	const {
 		data: members = [],

@@ -32,11 +32,12 @@ function Input({
 					props.editable === false &&
 						"opacity-50 web:cursor-not-allowed",
 					icon && "pl-11",
+					inputVariants({ ...props }),
 					className
 				)}
 				keyboardAppearance='dark'
 				placeholderTextColor={placeholderTextColor}
-				style={{ color: "white" }}
+				style={{ color: "white", fontFamily: "UbuntuMono_400Regular" }}
 				clearButtonMode='while-editing'
 				{...props}
 			/>

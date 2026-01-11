@@ -364,7 +364,13 @@ function Button({
 					{isLoading && (
 						<ActivityIndicator color={COLORS.accent.light} />
 					)}
-					{!isLoading && icon && <BText>{icon}</BText>}
+					{!isLoading && icon && (
+						<BText
+							className={`-ml-4 pl-2 items-center justify-center`}
+						>
+							{icon}
+						</BText>
+					)}
 					<>{children}</>
 				</View>
 			</Pressable>

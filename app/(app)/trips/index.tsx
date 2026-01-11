@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
+import RefreshControl from "@/components/ui/refresh-control";
 import SafeArea from "@/components/ui/safeArea";
 import { BText, IText, RText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
@@ -12,12 +13,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { getErrorMessage } from "@/utils/errorMessage";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-	RefreshControl,
-	ScrollView,
-	TouchableOpacity,
-	View,
-} from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Trips() {
 	const { user, setLastSelectedTrip } = useAuth();
@@ -73,9 +69,6 @@ export default function Trips() {
 					<RefreshControl
 						onRefresh={onReload}
 						refreshing={isPending}
-						colors={[COLORS.accent.light]}
-						progressBackgroundColor={COLORS.secondary.DEFAULT}
-						tintColor={COLORS.accent.light}
 					/>
 				}
 			>

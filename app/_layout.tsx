@@ -20,13 +20,13 @@ export default function RootLayout() {
 						<SocketProvider>
 							<View className='bg-background flex-1'>
 								<Slot />
-								<PortalHost />
 								<Toast config={toastConfig} />
 							</View>
 						</SocketProvider>
 					</AuthProvider>
 				</QueryClientProvider>
 			</BottomSheetModalProvider>
+			<PortalHost name='root' />
 		</GestureHandlerRootView>
 	);
 }

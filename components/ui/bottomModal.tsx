@@ -34,6 +34,8 @@ const BottomModal = forwardRef<Ref, BottomModalProps>(
 				backgroundStyle={[
 					{
 						backgroundColor: COLORS.background,
+						borderWidth: 1,
+						boxShadow: `0px -2px 15px rgba(51, 65, 85, 0.25)`,
 					},
 					props.backgroundStyle,
 				]}

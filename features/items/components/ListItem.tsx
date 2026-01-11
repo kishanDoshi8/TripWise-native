@@ -30,7 +30,7 @@ const ListItem = ({ item, onPress }: Readonly<Props>) => {
 	};
 
 	return (
-		<View className={`flex-row gap-3 px-5 py-3`}>
+		<View className={`flex-row gap-3 py-3`}>
 			<Checkbox
 				id={item.id}
 				checked={item.packedStatus}

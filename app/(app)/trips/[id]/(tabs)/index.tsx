@@ -1,5 +1,6 @@
 import BottomModal from "@/components/ui/bottomModal";
 import { Button } from "@/components/ui/button";
+import RefreshControl from "@/components/ui/refresh-control";
 import { BText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
@@ -21,7 +22,6 @@ import {
 	ActivityIndicator,
 	ImageBackground,
 	Pressable,
-	RefreshControl,
 	ScrollView,
 	View,
 } from "react-native";
@@ -107,7 +107,7 @@ export default function TripDetails() {
 						alignItems: "center",
 						flexDirection: "row",
 						marginHorizontal: 16,
-						marginTop: 8,
+						marginTop: 7,
 						zIndex: 50,
 					}}
 				>
@@ -155,9 +155,6 @@ export default function TripDetails() {
 					<RefreshControl
 						onRefresh={onReload}
 						refreshing={isTripLoading || isMembersLoading}
-						colors={[COLORS.accent.light]}
-						progressBackgroundColor={COLORS.secondary.DEFAULT}
-						tintColor={COLORS.accent.light}
 					/>
 				}
 			>

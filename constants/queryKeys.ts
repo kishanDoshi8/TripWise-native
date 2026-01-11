@@ -11,5 +11,6 @@ export const KEYS = {
         details: (tripId: string) => (['trip', 'details', tripId]),
         members: (tripId: string) => (['trip', 'members', tripId]),
         sharedItems: (tripId: string) => (['trip', 'sharedItems', tripId]),
+        checklist: (tripId: string) => (['trip', 'checklist', tripId]),
     }
 }

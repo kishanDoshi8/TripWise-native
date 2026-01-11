@@ -22,6 +22,7 @@ export const ICONS = {
 	chevronRight: createIcon(MaterialIcons, 'chevron-right'),
 	chevronLeft: createIcon(MaterialIcons, 'chevron-left'),
 	chevronDown: createIcon(MaterialIcons, 'keyboard-arrow-down'),
+	arrowDown: createIcon(MaterialIcons, 'arrow-drop-down'),
 	edit: createIcon(MaterialIcons, 'edit'),
 	settings: createIcon(MaterialIcons, 'settings'),
 	options: createIcon(AntDesign, 'ellipsis'),
@@ -32,6 +33,8 @@ export const ICONS = {
 	person: createIcon(MaterialIcons, 'person'),
 	money: createIcon(MaterialIcons, 'attach-money'),
 	list: createIcon(MaterialIcons, 'checklist'),
+	listAlt: createIcon(MaterialIcons, 'list-alt'),
+	restore: createIcon(MaterialIcons, 'restore'),
 };
 
 
