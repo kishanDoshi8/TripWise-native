@@ -63,7 +63,7 @@ export default function Trips() {
 	return (
 		<SafeArea className='flex-1 bg-background'>
 			<ScrollView
-				stickyHeaderIndices={[1]}
+				stickyHeaderIndices={[0]}
 				className={`pb-8`}
 				refreshControl={
 					<RefreshControl
@@ -73,13 +73,13 @@ export default function Trips() {
 				}
 			>
 				<View
-					className={`bg-secondary-dark py-8 flex-row items-center justify-between`}
+					className={`bg-background py-8 z-50 flex-row items-center justify-between`}
 				>
 					<View className={`m-auto`}>
 						<BText className='text-2xl'>Trips</BText>
 					</View>
 				</View>
-				<View className={`p-4`}>
+				<View className={`p-4`} style={{ paddingBottom: 72 }}>
 					<View className={`flex-1 gap-8`}>
 						<View>
 							<Input
@@ -126,6 +126,7 @@ export default function Trips() {
 					size={"lg"}
 					onPress={() => router.push(`/(app)/trips/new`)}
 					icon={ICONS.add(32, COLORS.foreground)}
+					className={`shadow-lg shadow-primary/30`}
 				>
 					<RText>Create New Trip</RText>
 				</Button>

@@ -159,7 +159,7 @@ const buttonVariants = cva(
 			color: "primary",
 			size: "default",
 		},
-	}
+	},
 );
 
 const buttonTextVariants = cva(
@@ -314,7 +314,7 @@ const buttonTextVariants = cva(
 			color: "primary",
 			size: "default",
 		},
-	}
+	},
 );
 
 type ButtonProps = React.ComponentProps<typeof Pressable> &
@@ -351,7 +351,7 @@ function Button({
 				className={cn(
 					isDisabled && "opacity-70 web:pointer-events-none",
 					fullWidth ? "w-full" : "self-start",
-					buttonVariants({ variant, color, size, className })
+					buttonVariants({ variant, color, size, className }),
 				)}
 				ref={ref}
 				accessibilityRole='button'
@@ -366,12 +366,12 @@ function Button({
 					)}
 					{!isLoading && icon && (
 						<BText
-							className={`-ml-4 pl-2 items-center justify-center`}
+							className={`items-center justify-center ${children && "-ml-4 pl-2"}`}
 						>
 							{icon}
 						</BText>
 					)}
-					<>{children}</>
+					{children && <>{children}</>}
 				</View>
 			</Pressable>
 		</TextClassContext.Provider>

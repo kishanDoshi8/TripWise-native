@@ -5,6 +5,8 @@ import {
 	BottomSheetModalProps,
 } from "@gorhom/bottom-sheet";
 import React, { forwardRef } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+// import {  } from "react-native-safe-area-context";
 
 export type Ref = BottomSheetModal;
 
@@ -14,6 +16,8 @@ interface BottomModalProps extends BottomSheetModalProps {
 
 const BottomModal = forwardRef<Ref, BottomModalProps>(
 	({ children, ...props }, ref) => {
+		const insets = useSafeAreaInsets();
+
 		return (
 			<BottomSheetModal
 				handleStyle={[
@@ -48,12 +52,14 @@ const BottomModal = forwardRef<Ref, BottomModalProps>(
 					/>
 				)}
 				ref={ref}
+				topInset={props.topInset ?? insets.top}
+				bottomInset={props.bottomInset ?? insets.bottom}
 				{...props}
 			>
 				{children}
 			</BottomSheetModal>
 		);
-	}
+	},
 );
 
 export default BottomModal;

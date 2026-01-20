@@ -20,20 +20,14 @@ function Input({
 }: InputProps) {
 	return (
 		<View className={cn("relative", wrapperClassName)}>
-			{icon && (
-				<BText className='absolute left-4 z-10 top-[50%] -translate-y-1/2 text-secondary-light'>
-					{icon}
-				</BText>
-			)}
-
 			<TextInput
 				className={cn(
 					"web:flex web:w-full rounded-md border-2 border-secondary focus:border-primary bg-background px-3 web:py-2 text-foreground web:ring-offset-background web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2",
 					props.editable === false &&
 						"opacity-50 web:cursor-not-allowed",
-					icon && "pl-11",
 					inputVariants({ ...props }),
-					className
+					icon && "pl-11",
+					className,
 				)}
 				keyboardAppearance='dark'
 				placeholderTextColor={placeholderTextColor}
@@ -41,6 +35,11 @@ function Input({
 				clearButtonMode='while-editing'
 				{...props}
 			/>
+			{icon && (
+				<BText className='absolute left-4 top-[50%] -translate-y-1/2 text-secondary-light'>
+					{icon}
+				</BText>
+			)}
 		</View>
 	);
 }
@@ -50,11 +49,11 @@ const inputVariants = cva(
 	{
 		variants: {
 			size: {
-				DEFAULT: "web:py-1 native:text-base",
-				sm: "web:py-1 native:text-sm",
-				lg: "web:py-3 native:text-lg",
-				xl: "web:py-4 native:text-xl",
-				xl2: "web:py-4 native:text-2xl",
+				DEFAULT: "",
+				sm: "",
+				lg: "",
+				xl: "",
+				xl2: "",
 			},
 			variant: {
 				DEFAULT: "",
@@ -64,7 +63,7 @@ const inputVariants = cva(
 			size: "DEFAULT",
 			variant: "DEFAULT",
 		},
-	}
+	},
 );
 
 export { Input };

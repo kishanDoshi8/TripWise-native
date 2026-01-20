@@ -4,7 +4,9 @@ import RefreshControl from "@/components/ui/refresh-control";
 import { BText } from "@/components/ui/text";
 import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { useGetSharedItems } from "@/features/items/api/get-shared-items";
+import { useFetchTripImages } from "@/features/trips/api/get-images";
 import { useGetTripMembers } from "@/features/trips/api/get-members";
 import { useGetTripDetails } from "@/features/trips/api/get-trip-details";
 import Details from "@/features/trips/components/Details";
@@ -13,10 +15,11 @@ import { useItemSocket } from "@/features/trips/hooks/useItemSocket";
 import { useTripSocket } from "@/features/trips/hooks/useTripSocket";
 import { useToast } from "@/hooks/useToast";
 import { TripMemberColorsProvider } from "@/providers/TripMemberColorsProvider";
+import { setItem } from "@/utils/asyncStore";
 import { getErrorMessage } from "@/utils/errorMessage";
 import { getThumbnailSource } from "@/utils/thumbnailHelper";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useRef } from "react";
 import {
 	ActivityIndicator,
@@ -30,6 +33,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function TripDetails() {
 	const insets = useSafeAreaInsets();
 	const { id }: { id: string } = useLocalSearchParams();
+	useFocusEffect(() => {
+		setItem(STORAGE_KEYS.UI.SELECTED_TAB, "index");
+	});
 
 	useTripSocket(id);
 	useItemSocket(id);
@@ -124,7 +130,7 @@ export default function TripDetails() {
 							>
 								{ICONS.chevronLeft(
 									24,
-									COLORS.secondary.foreground
+									COLORS.secondary.foreground,
 								)}
 							</View>
 						)}

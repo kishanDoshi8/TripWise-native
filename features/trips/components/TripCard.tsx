@@ -24,10 +24,11 @@ export default function TripCard({ trip, styles }: Readonly<Props>) {
 			source={getThumbnailSource(trip.thumbnail)}
 			style={[
 				{
-					height: 224,
+					height: 200,
 					width: "100%",
 					borderRadius: 24,
 					overflow: "hidden",
+					marginBottom: 24,
 				},
 				styles,
 			]}
@@ -61,7 +62,7 @@ export default function TripCard({ trip, styles }: Readonly<Props>) {
 						selected
 					</RText>
 				)}
-				<RText className={`bg-primary px-4 rounded-full`}>
+				<RText className={`bg-background px-4 rounded-full`}>
 					{getDistance(trip.startDate)}
 				</RText>
 			</View>
