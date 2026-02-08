@@ -11,11 +11,10 @@ export default function TabsLayout() {
 	const { id }: { id: string } = useLocalSearchParams();
 	const insets = useSafeAreaInsets();
 
-	const tabs = ["index", "shared", "personal", "expense", "profile"] as const;
+	const tabs = ["index", "shared", "expense", "profile"] as const;
 	const TAB_ROUTES = {
 		index: "/(app)/trips/[id]/(tabs)",
 		shared: "/(app)/trips/[id]/(tabs)/shared",
-		personal: "/(app)/trips/[id]/(tabs)/personal",
 		expense: "/(app)/trips/[id]/(tabs)/expense",
 		profile: "/(app)/trips/[id]/(tabs)/profile",
 	} as const;
@@ -25,7 +24,7 @@ export default function TabsLayout() {
 
 		(async () => {
 			const lastTab = await getItem<(typeof tabs)[number]>(
-				STORAGE_KEYS.UI.SELECTED_TAB
+				STORAGE_KEYS.UI.SELECTED_TAB,
 			);
 
 			if (cancelled || !lastTab || lastTab === "index") return;
@@ -49,7 +48,7 @@ export default function TabsLayout() {
 				tabBarShowLabel: false,
 				tabBarStyle: {
 					backgroundColor: COLORS.secondary.dark,
-					borderTopWidth: 2,
+					borderTopWidth: 0,
 					boxShadow: "0px -2px 5px rgba(0, 0, 0, 0.3)",
 					borderColor: COLORS.background,
 					height: 72,
@@ -80,9 +79,19 @@ export default function TabsLayout() {
 					tabBarIcon: ({ focused }) => (
 						<TabBarIcon icon={ICONS.groups} focused={focused} />
 					),
+
+					tabBarStyle: {
+						backgroundColor: COLORS.secondary.dark,
+						borderTopWidth: 0,
+						// boxShadow: "0px -2px 5px rgba(0, 0, 0, 0.3)",
+						// borderColor: COLORS.background,
+						height: 72,
+						paddingTop: 8,
+						paddingBottom: insets.bottom + 32 || 16,
+					},
 				}}
 			/>
-			<Tabs.Screen
+			{/* <Tabs.Screen
 				name='personal'
 				options={{
 					title: "Personal",
@@ -95,7 +104,7 @@ export default function TabsLayout() {
 						<TabBarIcon icon={ICONS.list} focused={focused} />
 					),
 				}}
-			/>
+			/> */}
 			<Tabs.Screen
 				name='expense'
 				options={{

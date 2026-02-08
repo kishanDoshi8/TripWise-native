@@ -15,14 +15,9 @@ import { Item } from "@/types/packingItem";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo } from "react";
-import { TextInput, View } from "react-native";
-import Animated, {
-	Extrapolation,
-	interpolate,
-	useAnimatedScrollHandler,
-	useAnimatedStyle,
-	useSharedValue,
-} from "react-native-reanimated";
+import { KeyboardAvoidingView, TextInput, View } from "react-native";
+import Animated from "react-native-reanimated";
+import { useAddItem } from "../api/add-item";
 import { useGetChecklists } from "../api/get-checklists";
 import { useGetSharedItems } from "../api/get-shared-items";
 import ItemModal from "./ItemModal";
@@ -34,8 +29,11 @@ export type ItemModalOptions = {
 
 const SharedList = () => {
 	const { id }: { id: string } = useLocalSearchParams();
+	const { mutate: addItemMutate } = useAddItem();
 
-	const [activeItem, setActiveItem] = React.useState<Item | null>(null);
+	const [activeItem, setActiveItem] = React.useState<
+		Item | (Partial<Item> & { tripId: string }) | null
+	>(null);
 	const [openAssignees, setOpenAssignees] = React.useState<boolean>(false);
 	const bottomSheetRef = React.useRef<BottomSheetModal>(null);
 
@@ -51,6 +49,7 @@ const SharedList = () => {
 	} = useGetSharedItems(id);
 
 	const [searchQuery, setSearchQuery] = React.useState<string>("");
+	const [quickAddItemName, setQuickAddItemName] = React.useState<string>("");
 	const searchInputRef = React.useRef<TextInput | null>(null);
 	const filteredItems = useMemo(() => {
 		if (!searchQuery.trim()) return items;
@@ -59,7 +58,7 @@ const SharedList = () => {
 				item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				item.description
 					?.toLowerCase()
-					.includes(searchQuery.toLowerCase())
+					.includes(searchQuery.toLowerCase()),
 		);
 	}, [items, searchQuery]);
 
@@ -70,7 +69,7 @@ const SharedList = () => {
 			checklists.map((c) => [
 				c.id,
 				{ title: c.name, id: c.id, data: [] as typeof items },
-			])
+			]),
 		);
 
 		const untitled = {
@@ -89,7 +88,7 @@ const SharedList = () => {
 
 		return [
 			...Array.from(checklistMap.values()).filter(
-				(s) => s.data.length > 0
+				(s) => s.data.length > 0,
 			),
 			...(untitled.data.length ? [untitled] : []),
 		];
@@ -99,33 +98,18 @@ const SharedList = () => {
 		refetchSharedItems();
 	}, [id]);
 
-	const scrollY = useSharedValue(0);
-	const animatedStyle = useAnimatedStyle(() => {
-		return {
-			transform: [
-				{
-					translateY: interpolate(
-						scrollY.value,
-						[0, 10],
-						[0, 80],
-						Extrapolation.CLAMP
-					),
-				},
-			],
-			opacity: interpolate(
-				scrollY.value,
-				[0, 10],
-				[1, 0],
-				Extrapolation.CLAMP
-			),
-		};
-	});
+	const handleAddItem = () => {
+		if (quickAddItemName.trim() === "") {
+			setActiveItem({ tripId: id });
+			return;
+		}
 
-	const scrollHandler = useAnimatedScrollHandler({
-		onScroll: (event) => {
-			scrollY.value = event.contentOffset.y;
-		},
-	});
+		addItemMutate({
+			tripId: id,
+			name: quickAddItemName.trim(),
+		});
+		setQuickAddItemName("");
+	};
 
 	return (
 		<>
@@ -138,7 +122,6 @@ const SharedList = () => {
 					/>
 				}
 				stickyHeaderIndices={[0]}
-				onScroll={scrollHandler}
 				scrollEventThrottle={16}
 			>
 				<View
@@ -165,14 +148,11 @@ const SharedList = () => {
 						{ICONS.options(24, COLORS.secondary.foreground)}
 					</Button>
 				</View>
-				<Input
-					ref={searchInputRef}
-					placeholder='Search'
-					className={`mx-4 rounded-full mb-2`}
-					value={searchQuery}
-					onChangeText={(text) => setSearchQuery(text)}
-					size={"lg"}
-				/>
+				{items.length === 0 && !isSharedItemsLoading && (
+					<RText className={`text-center mt-4`}>
+						No shared items found.
+					</RText>
+				)}
 				{sections.map((section) => (
 					<Accordion
 						key={section.id}
@@ -195,7 +175,7 @@ const SharedList = () => {
 										onPress={(options) => {
 											setActiveItem(item);
 											setOpenAssignees(
-												options?.showAssignees || false
+												options?.showAssignees || false,
 											);
 										}}
 									/>
@@ -204,43 +184,54 @@ const SharedList = () => {
 						</AccordionItem>
 					</Accordion>
 				))}
-
-				{activeItem && (
-					<ItemModal
-						activeItem={activeItem}
-						onDismiss={() => setActiveItem(null)}
-						showAssigness={openAssignees}
-					/>
-				)}
 			</Animated.ScrollView>
-			<View
-				style={[
-					{
-						position: "absolute",
-						bottom: 16,
-						right: 16,
-						flexDirection: "column",
-						// justifyContent: "flex-end",
-						alignItems: "flex-end",
-						gap: 16,
-					},
-				]}
+
+			<KeyboardAvoidingView
+				behavior='padding'
+				keyboardVerticalOffset={34}
 			>
-				<Animated.View style={animatedStyle}>
+				<View
+					style={{
+						borderTopWidth: 2,
+						paddingHorizontal: 16,
+						paddingTop: 16,
+						paddingBottom: 8,
+						boxShadow: "0px -2px 5px rgba(0, 0, 0, 0.3)",
+					}}
+					className={`bg-secondary-dark border-background flex-row items-center gap-2`}
+				>
+					<Input
+						ref={searchInputRef}
+						placeholder='Quick add item...'
+						wrapperClassName='flex-1'
+						className={`rounded-full flex-1`}
+						value={quickAddItemName}
+						onChangeText={(text) => setQuickAddItemName(text)}
+						size={"lg"}
+						icon={ICONS.search(20, COLORS.secondary.light)}
+						onSubmitEditing={handleAddItem}
+					/>
 					<Button
-						color={"accent"}
-						variant={"flat"}
+						size={"iconMedium"}
 						className={`rounded-full`}
-						size={"iconLarge"}
-						onPress={() => searchInputRef.current?.focus()}
+						onPress={handleAddItem}
 					>
-						<RText>{ICONS.search(24, COLORS.accent.light)}</RText>
+						<RText>
+							{quickAddItemName.trim() === ""
+								? ICONS.postAdd(24, COLORS.secondary.foreground)
+								: ICONS.add(24, COLORS.secondary.foreground)}
+						</RText>
 					</Button>
-				</Animated.View>
-				<Button size={"iconLarge"} className={`rounded-full`}>
-					<RText>{ICONS.add(24, COLORS.secondary.foreground)}</RText>
-				</Button>
-			</View>
+				</View>
+			</KeyboardAvoidingView>
+
+			{activeItem && (
+				<ItemModal
+					activeItem={activeItem}
+					onDismiss={() => setActiveItem(null)}
+					showAssignees={openAssignees}
+				/>
+			)}
 		</>
 	);
 };

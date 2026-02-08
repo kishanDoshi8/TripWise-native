@@ -11,7 +11,8 @@ import {
 	BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
+import { setItem } from "expo-secure-store";
+import React from "react";
 import { Pressable, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -37,9 +38,11 @@ const ItemChecklistModal = ({
 
 	const [newChecklistName, setNewChecklistName] = React.useState<string>("");
 
-	useEffect(() => {
+	const handleChecklistPress = (id: string | null) => {
+		setItem("item.last.quick.add.checklist", id || "");
+		setChecklistId(id);
 		modalRef.current?.dismiss();
-	}, [checklistId]);
+	};
 
 	const onAddChecklist = () => {
 		createChecklist(
@@ -57,7 +60,7 @@ const ItemChecklistModal = ({
 						desc: error.message || "Failed to create checklist.",
 					});
 				},
-			}
+			},
 		);
 	};
 
@@ -122,21 +125,24 @@ const ItemChecklistModal = ({
 							<Pressable
 								className={`py-2 flex-row items-center gap-2`}
 								onPress={() => {
-									setChecklistId(null);
+									handleChecklistPress(null);
 								}}
 							>
 								<RText>
 									{ICONS.listAlt(
 										20,
-										checklistId === null
+										checklistId === null ||
+											checklistId === ""
 											? COLORS.accent.DEFAULT
-											: undefined
+											: undefined,
 									)}
 								</RText>
 								<RText
 									size='xl2'
 									className={`${
-										checklistId === null && "text-accent"
+										(checklistId === null ||
+											checklistId === "") &&
+										"text-accent"
 									}`}
 								>
 									Shared List
@@ -151,7 +157,7 @@ const ItemChecklistModal = ({
 											: ""
 									}`}
 									onPress={() => {
-										setChecklistId(checklist.id);
+										handleChecklistPress(checklist.id);
 									}}
 								>
 									<RText>
@@ -159,7 +165,7 @@ const ItemChecklistModal = ({
 											20,
 											checklistId === checklist.id
 												? COLORS.accent.DEFAULT
-												: undefined
+												: undefined,
 										)}
 									</RText>
 									<RText

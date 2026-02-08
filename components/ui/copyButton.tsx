@@ -20,7 +20,7 @@ export function CopyButton({ value, iconSize = 14, label }: Readonly<Props>) {
 			>
 				{copied
 					? ICONS.check(iconSize, COLORS.primary.DEFAULT)
-					: ICONS.copy(iconSize, COLORS.foreground)}
+					: ICONS.copy(iconSize, COLORS.secondary.light)}
 				{label ? (
 					<RText size='sm' className='text-muted-foreground'>
 						{copied ? "Copied!" : label}

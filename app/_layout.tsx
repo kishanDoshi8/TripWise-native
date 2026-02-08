@@ -14,6 +14,7 @@ import "../assets/styles/global.css";
 export default function RootLayout() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
+			<PortalHost name='root' />
 			<BottomSheetModalProvider>
 				<QueryClientProvider client={queryClient}>
 					<AuthProvider>
@@ -26,7 +27,7 @@ export default function RootLayout() {
 					</AuthProvider>
 				</QueryClientProvider>
 			</BottomSheetModalProvider>
-			<PortalHost name='root' />
+			{/* <PortalHost name='root' /> */}
 		</GestureHandlerRootView>
 	);
 }

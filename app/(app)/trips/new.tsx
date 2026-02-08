@@ -9,6 +9,7 @@ import { useCreateTrip } from "@/features/trips/api/create-trip";
 import { useToast } from "@/hooks/useToast";
 import { Trip } from "@/types/trip";
 import { getDuration, getRange } from "@/utils/dateFormatter";
+import { getErrorMessage } from "@/utils/errorMessage";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import React from "react";
@@ -122,7 +123,8 @@ const NewTrip = () => {
 				onError: (error) => {
 					showToast({
 						type: "error",
-						title: `Failed to create trip: ${error.message}`,
+						title: `Failed to create trip`,
+						desc: getErrorMessage(error),
 					});
 				},
 			},
@@ -166,13 +168,15 @@ const NewTrip = () => {
 						placeholder='Where to?'
 						value={location}
 						onChangeText={setLocation}
+						className={`rounded-full`}
+						icon={ICONS.location(16, COLORS.secondary.light)}
 					/>
 					<View>
 						<Button
 							onPress={handleDateRange}
 							color={"secondary"}
 							variant='bordered'
-							className={`border-2`}
+							className={`border-2 rounded-full`}
 							fullWidth
 						>
 							<RText>
@@ -196,7 +200,7 @@ const NewTrip = () => {
 				</View>
 			</ScrollView>
 			<Button
-				className={`absolute bottom-12 right-12 left-12`}
+				className={`absolute bottom-12 right-12 left-12 rounded-full`}
 				onPress={handleCreateTrip}
 				disabled={isCreatingTrip}
 				variant='solid'

@@ -3,12 +3,16 @@ import { cn } from "@/utils/cn";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { TextInput, View, type TextInputProps } from "react-native";
-import { BText } from "./text";
+import { Button } from "./button";
+import { BText, RText } from "./text";
 
 type InputProps = TextInputProps & {
 	ref?: React.RefObject<TextInput | null>;
 	wrapperClassName?: string;
 	icon?: React.ReactNode;
+	actionName?: string;
+	action?: () => void;
+	isActionLoading?: boolean;
 } & VariantProps<typeof inputVariants>;
 
 function Input({
@@ -16,6 +20,9 @@ function Input({
 	wrapperClassName,
 	placeholderTextColor = COLORS.secondary.light,
 	icon,
+	actionName,
+	action,
+	isActionLoading = false,
 	...props
 }: InputProps) {
 	return (
@@ -35,35 +42,50 @@ function Input({
 				clearButtonMode='while-editing'
 				{...props}
 			/>
-			{icon && (
-				<BText className='absolute left-4 top-[50%] -translate-y-1/2 text-secondary-light'>
-					{icon}
-				</BText>
+			<View className='absolute left-4 top-[50%] -translate-y-1/2 text-secondary-light'>
+				{icon && <BText>{icon}</BText>}
+			</View>
+			{actionName && action && (
+				<Button
+					style={{
+						position: "absolute",
+						top: "50%",
+						bottom: 0,
+						right: 12,
+						transform: [{ translateY: "-50%" }],
+						borderRadius: 9999,
+					}}
+					onPress={action}
+					disabled={!actionName}
+					variant={"flat"}
+					size={"sm"}
+					color={"secondary"}
+					isLoading={isActionLoading}
+				>
+					<RText size={"sm"}>{actionName}</RText>
+				</Button>
 			)}
 		</View>
 	);
 }
 
-const inputVariants = cva(
-	"web:flex web:w-full rounded-md border-2 border-secondary focus:border-primary bg-background px-3 web:py-2 text-base lg:text-sm native:text-lg native:leading-[1.25] text-foreground web:ring-offset-background web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2",
-	{
-		variants: {
-			size: {
-				DEFAULT: "",
-				sm: "",
-				lg: "",
-				xl: "",
-				xl2: "",
-			},
-			variant: {
-				DEFAULT: "",
-			},
+const inputVariants = cva("", {
+	variants: {
+		size: {
+			DEFAULT: "",
+			sm: "",
+			lg: "h-12",
+			xl: "",
+			xl2: "",
 		},
-		defaultVariants: {
-			size: "DEFAULT",
-			variant: "DEFAULT",
+		variant: {
+			DEFAULT: "",
 		},
 	},
-);
+	defaultVariants: {
+		size: "DEFAULT",
+		variant: "DEFAULT",
+	},
+});
 
 export { Input };

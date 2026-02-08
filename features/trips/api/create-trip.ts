@@ -20,7 +20,6 @@ const createTrip = async (tripData: CreateTrip): Promise<Trip> => {
 		method: apiRoutes.trip.createTrip().method,
 		data: tripData,
 	});
-	console.log(res.data.trip);
 	return TripSchema.parse(res.data.trip);
 };
 

@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/Input";
 import RefreshControl from "@/components/ui/refresh-control";
 import SafeArea from "@/components/ui/safeArea";
 import { BText, IText, RText } from "@/components/ui/text";
-import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
 import { useGetUpcomingTrips } from "@/features/trips/api/get-upcoming-trips";
 import TripCard from "@/features/trips/components/TripCard";
@@ -39,7 +38,7 @@ export default function Trips() {
 			(trip) =>
 				trip.name.toLowerCase().includes(lowerSearch) ||
 				trip.description?.toLowerCase().includes(lowerSearch) ||
-				trip.locationName.toLowerCase().includes(lowerSearch)
+				trip.locationName.toLowerCase().includes(lowerSearch),
 		);
 
 		setFilteredTrips(filtered);
@@ -125,8 +124,7 @@ export default function Trips() {
 					color={"primary"}
 					size={"lg"}
 					onPress={() => router.push(`/(app)/trips/new`)}
-					icon={ICONS.add(32, COLORS.foreground)}
-					className={`shadow-lg shadow-primary/30`}
+					className={`shadow-lg shadow-primary/30 rounded-full`}
 				>
 					<RText>Create New Trip</RText>
 				</Button>

@@ -7,11 +7,6 @@ module.exports = {
 	presets: [require("nativewind/preset")],
 	theme: {
 		extend: {
-			fontFamily: {
-				ubuntu: ["UbuntuMono_400Regular"],
-				"ubuntu-italic": ["UbuntuMono_400Regular_Italic"],
-				"ubuntu-bold": ["UbuntuMono_700Bold"],
-			},
 			// update constants/colors when you update colors here
 			colors: {
 				background: "#020617",

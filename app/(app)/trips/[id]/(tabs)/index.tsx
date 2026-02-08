@@ -6,11 +6,10 @@ import { COLORS } from "@/constants/colors";
 import { ICONS } from "@/constants/icons";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { useGetSharedItems } from "@/features/items/api/get-shared-items";
-import { useFetchTripImages } from "@/features/trips/api/get-images";
 import { useGetTripMembers } from "@/features/trips/api/get-members";
 import { useGetTripDetails } from "@/features/trips/api/get-trip-details";
 import Details from "@/features/trips/components/Details";
-import TripMemebers from "@/features/trips/components/TripMemebers";
+import TripMembers from "@/features/trips/components/TripMembers";
 import { useItemSocket } from "@/features/trips/hooks/useItemSocket";
 import { useTripSocket } from "@/features/trips/hooks/useTripSocket";
 import { useToast } from "@/hooks/useToast";
@@ -24,6 +23,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import {
 	ActivityIndicator,
 	ImageBackground,
+	KeyboardAvoidingView,
 	Pressable,
 	ScrollView,
 	View,
@@ -148,29 +148,36 @@ export default function TripDetails() {
 			</ImageBackground>
 
 			{/* Content */}
-			<ScrollView
-				contentContainerStyle={{
-					paddingTop: imageHeight - 24,
-					paddingBottom: 32,
-				}}
-				style={{
-					flex: 1,
-					zIndex: 2,
-				}}
-				refreshControl={
-					<RefreshControl
-						onRefresh={onReload}
-						refreshing={isTripLoading || isMembersLoading}
-					/>
-				}
+			<KeyboardAvoidingView
+				behavior='padding'
+				enabled={true}
+				style={{ flex: 1 }}
 			>
-				<View className='rounded-[24px] py-4 bg-background'>
-					<TripMemberColorsProvider members={members}>
-						<Details trip={trip} />
-						<TripMemebers members={members} />
-					</TripMemberColorsProvider>
-				</View>
-			</ScrollView>
+				<ScrollView
+					keyboardShouldPersistTaps='handled'
+					contentContainerStyle={{
+						paddingTop: imageHeight - 24,
+						paddingBottom: 32,
+					}}
+					style={{
+						flex: 1,
+						zIndex: 2,
+					}}
+					refreshControl={
+						<RefreshControl
+							onRefresh={onReload}
+							refreshing={isTripLoading || isMembersLoading}
+						/>
+					}
+				>
+					<View className='rounded-[24px] py-4 bg-background'>
+						<TripMemberColorsProvider members={members}>
+							<Details trip={trip} />
+							<TripMembers members={members} />
+						</TripMemberColorsProvider>
+					</View>
+				</ScrollView>
+			</KeyboardAvoidingView>
 
 			<BottomModal
 				ref={bottomSheetRef}

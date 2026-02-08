@@ -61,5 +61,13 @@ export const apiRoutes = {
 			method: "PATCH",
 		}),
 		images: { url: `/images`, method: "GET" },
+		inviteMember: (tripId: string) => ({
+			url: `/trips/${tripId}/invite`,
+			method: "POST",
+		}),
+		addItem: () => ({
+			url: `/packing-items`,
+			method: "POST",
+		}),
 	},
 };

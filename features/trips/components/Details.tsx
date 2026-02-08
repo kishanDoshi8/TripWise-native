@@ -12,7 +12,7 @@ type Props = {
 
 export default function Details({ trip }: Readonly<Props>) {
 	return (
-		<View className={`px-4`}>
+		<View className={`px-4 py-2`}>
 			<View className={`justify-between flex-row items-center mb-4`}>
 				<BText className='text-3xl'>{trip.name}</BText>
 			</View>
@@ -26,7 +26,9 @@ export default function Details({ trip }: Readonly<Props>) {
 			>
 				{ICONS.location(
 					12,
-					trip.locationLink ? COLORS.primary.light : COLORS.foreground
+					trip.locationLink
+						? COLORS.primary.light
+						: COLORS.foreground,
 				)}
 				<BText
 					className={`${
